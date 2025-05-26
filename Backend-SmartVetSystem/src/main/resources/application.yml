@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: SmartVetSystem
+
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: ${URL_DB}
+    username: ${USERNAME_DB}
+    password: ${PASSWORD_DB}
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+jwt:
+  signerKey: ${SIGNER_KEY}
+  valid_duration: 3600
+  refresh_token: 30 #days
+server:
+  address: 0.0.0.0
+  port: 8080
+
