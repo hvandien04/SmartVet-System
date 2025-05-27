@@ -26,8 +26,8 @@ public class Appointment {
     private com.example.Backend_SmartVetSystem.entity.Owner owner;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "doctor_id")
-    private com.example.Backend_SmartVetSystem.entity.User doctor;
+    @JoinColumn(name = "user_id")
+    private com.example.Backend_SmartVetSystem.entity.User user;
 
     @Column(name = "appointment_time", nullable = false)
     private Instant appointmentTime;

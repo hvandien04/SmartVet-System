@@ -18,8 +18,8 @@ public class DiagnosisHistory {
     private String diagnosisId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "doctor_id")
-    private com.example.Backend_SmartVetSystem.entity.User doctor;
+    @JoinColumn(name = "user_id")
+    private com.example.Backend_SmartVetSystem.entity.User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pet_id")

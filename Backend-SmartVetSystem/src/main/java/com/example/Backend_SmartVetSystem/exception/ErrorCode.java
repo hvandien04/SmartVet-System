@@ -15,6 +15,8 @@ public enum ErrorCode {
     INVALID_PASSWORD(1005, "Invalid password", HttpStatus.BAD_REQUEST),
     UNAUTHENTICATED(1006, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     OWNER_NOT_FOUND(1007, "Owner not found", HttpStatus.NOT_FOUND),
+    PET_NOT_FOUND(1008, "Pet not found", HttpStatus.NOT_FOUND),
+    MEDICAL_RECORD_NOT_FOUND(1009, "Medical record not found", HttpStatus.NOT_FOUND),
     ;
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

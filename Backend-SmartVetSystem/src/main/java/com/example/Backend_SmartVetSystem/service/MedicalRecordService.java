@@ -1,0 +1,66 @@
+package com.example.Backend_SmartVetSystem.service;
+
+import com.example.Backend_SmartVetSystem.dto.request.MedicalRecordRequest;
+import com.example.Backend_SmartVetSystem.dto.response.MedicalRecordResponse;
+import com.example.Backend_SmartVetSystem.entity.MedicalRecord;
+import com.example.Backend_SmartVetSystem.entity.Pet;
+import com.example.Backend_SmartVetSystem.entity.User;
+import com.example.Backend_SmartVetSystem.exception.AppException;
+import com.example.Backend_SmartVetSystem.exception.ErrorCode;
+import com.example.Backend_SmartVetSystem.mapper.MedicalRecordMapper;
+import com.example.Backend_SmartVetSystem.repository.MedicalRecordRepository;
+import com.example.Backend_SmartVetSystem.repository.PetRepository;
+import com.example.Backend_SmartVetSystem.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class MedicalRecordService {
+    private final MedicalRecordRepository medicalRecordRepository;
+    private final IdGeneratorService idGeneratorService;
+    private final MedicalRecordMapper medicalRecordMapper;
+    private final UserRepository userRepository;
+    private final PetRepository petRepository;
+
+    public MedicalRecordResponse createMedicalRecord(MedicalRecordRequest medicalRecordRequest) {
+        MedicalRecord medicalRecord = medicalRecordMapper.toMedicalRecord(medicalRecordRequest);
+        medicalRecord.setRecordId(idGeneratorService.generateRandomId("R",medicalRecordRepository::existsById));
+        User user = userRepository.findById(medicalRecordRequest.getUserId()).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_FOUND));
+        Pet pet = petRepository.findById(medicalRecordRequest.getPetId()).orElseThrow(()-> new AppException(ErrorCode.PET_NOT_FOUND));
+        medicalRecord.setPet(pet);
+        medicalRecord.setUser(user);
+        return medicalRecordMapper.toMedicalRecordResponse(medicalRecordRepository.save(medicalRecord));
+    }
+
+    public MedicalRecordResponse updateMedicalRecord(String recordId, MedicalRecordRequest medicalRecordRequest) {
+        MedicalRecord record = medicalRecordRepository.findById(recordId).orElseThrow(()-> new AppException(ErrorCode.MEDICAL_RECORD_NOT_FOUND));
+        medicalRecordMapper.UpdateMedicalRecord(record,medicalRecordRequest);
+        if(medicalRecordRequest.getPetId()!=null){
+            Pet pet = petRepository.findById(medicalRecordRequest.getPetId()).orElseThrow(()-> new AppException(ErrorCode.PET_NOT_FOUND));
+            record.setPet(pet);
+        }
+        if(medicalRecordRequest.getUserId()!=null){
+            User user = userRepository.findById(medicalRecordRequest.getUserId()).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_FOUND));
+            record.setUser(user);
+        }
+        return medicalRecordMapper.toMedicalRecordResponse(medicalRecordRepository.save(record));
+    }
+
+    public List<MedicalRecordResponse> getAllMedicalRecords() {
+        return medicalRecordRepository.findAll().stream().map(medicalRecordMapper::toMedicalRecordResponse).collect(Collectors.toList());
+    }
+
+    public MedicalRecordResponse getMedicalRecord(String recordId) {
+        return medicalRecordMapper.toMedicalRecordResponse(medicalRecordRepository.findById(recordId).orElseThrow(()-> new AppException(ErrorCode.MEDICAL_RECORD_NOT_FOUND)));
+    }
+
+    public String deleteMedicalRecord(String recordId) {
+        medicalRecordRepository.deleteById(recordId);
+        return "Medical Record has Id " + recordId + " deleted";
+    }
+
+}

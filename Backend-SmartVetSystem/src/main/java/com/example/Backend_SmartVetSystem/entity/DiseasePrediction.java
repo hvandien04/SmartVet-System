@@ -18,8 +18,8 @@ public class DiseasePrediction {
     private String predictionId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "doctor_id")
-    private com.example.Backend_SmartVetSystem.entity.User doctor;
+    @JoinColumn(name = "user_id")
+    private com.example.Backend_SmartVetSystem.entity.User user;
 
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;

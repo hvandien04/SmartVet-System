@@ -36,8 +36,13 @@ public class OwnerService {
         return ownerMapper.toOwnerResponse(ownerRepository.save(owner));
     }
 
-    public void deleteOwner(String ownerId) {
+    public String deleteOwner(String ownerId) {
         ownerRepository.deleteById(ownerId);
+        return "owner has Id "+ ownerId + " deleted";
     }
 
+    public OwnerResponse getOwner(String ownerId) {
+        Owner owner = ownerRepository.findById(ownerId).orElseThrow(()->new AppException(ErrorCode.OWNER_NOT_FOUND));
+        return ownerMapper.toOwnerResponse(owner);
+    }
 }

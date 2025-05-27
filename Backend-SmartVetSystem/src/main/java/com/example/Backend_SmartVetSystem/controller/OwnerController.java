@@ -36,4 +36,18 @@ public class OwnerController {
                 .result(ownerService.getAllOwners())
                 .build();
     }
+
+    @GetMapping("/{ownerId}")
+    ApiResponse<OwnerResponse> getOwner(@PathVariable String ownerId) {
+        return ApiResponse.<OwnerResponse>builder()
+                .result(ownerService.getOwner(ownerId))
+                .build();
+    }
+
+    @DeleteMapping("/{ownerId}")
+    ApiResponse<String> deleteOwner(@PathVariable String ownerId) {
+        return ApiResponse.<String>builder()
+                .result(ownerService.deleteOwner(ownerId))
+                .build();
+    }
 }

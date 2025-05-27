@@ -25,7 +25,7 @@ public class AdminController {
                 .build();
     }
 
-    @PostMapping("/{userId}")
+    @PutMapping("/{userId}")
     ApiResponse<UserResponse> UpdateUser(@PathVariable String userId, @RequestBody UserUpdateRequest request) {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.updateUser(userId, request))

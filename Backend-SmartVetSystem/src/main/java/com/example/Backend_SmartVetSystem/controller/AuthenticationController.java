@@ -56,13 +56,6 @@ public class AuthenticationController {
                 .build();
     }
 
-    @PutMapping
-    ApiResponse<UserResponse> UpdatePassword(@RequestBody UserUpdatePasswordRequest request) {
-        return ApiResponse.<UserResponse>builder()
-                .result(userService.updatePassword(request))
-                .build();
-    }
-
     @PostMapping("/refresh-token")
     public ApiResponse<AuthenticationResponse> refreshToken(
             @CookieValue(name = "refresh_token", required = false) String refreshToken) throws ParseException, JOSEException {

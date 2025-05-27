@@ -62,6 +62,15 @@ public class UserService {
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
+
+    @PostAuthorize("returnObject.username==authentication.name")
+    public UserResponse getMyInfo() {
+        var context = SecurityContextHolder.getContext();
+        var username = context.getAuthentication().getName();
+        User user = userRepository.findByUsername(username).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_FOUND));
+        return userMapper.toUserResponse(user);
+    }
+
     @PreAuthorize("hasRole('ADMIN')")
     public List<UserResponse> getAllUsers() {
         return userRepository.findAll().stream().map(userMapper::toUserResponse).collect(Collectors.toList());

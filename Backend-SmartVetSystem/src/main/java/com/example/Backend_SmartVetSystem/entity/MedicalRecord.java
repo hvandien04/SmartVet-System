@@ -23,12 +23,8 @@ public class MedicalRecord {
     private com.example.Backend_SmartVetSystem.entity.Pet pet;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "doctor_id")
-    private com.example.Backend_SmartVetSystem.entity.User doctor;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "prediction_id")
-    private DiseasePrediction prediction;
+    @JoinColumn(name = "user_id")
+    private com.example.Backend_SmartVetSystem.entity.User user;
 
     @Column(name = "visit_date", nullable = false)
     private Instant visitDate;
