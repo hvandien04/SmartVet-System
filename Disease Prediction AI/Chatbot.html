@@ -1,0 +1,300 @@
+<!DOCTYPE html> 
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pet Health ChatBot - Giao diện chat</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 20px auto;
+      border: 1px solid #ccc;
+      padding: 10px;
+      background: #fafafa;
+      display: flex;
+      flex-direction: column;
+      height: 90vh;
+    }
+    #chatBox {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .message {
+      max-width: 70%;
+      padding: 10px 15px;
+      border-radius: 20px;
+      line-height: 1.4;
+      font-size: 15px;
+    }
+    .user-message {
+      background: #007bff;
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 0;
+    }
+    .bot-message {
+      background: #e1e1e1;
+      color: #333;
+      align-self: flex-start;
+      border-bottom-left-radius: 0;
+    }
+    #inputArea {
+        margin-top: 10px;
+        display: flex;
+        gap: 10px;
+        align-items: flex-end; /* Cố định nút Gửi ở đáy */
+    }
+    #userInput {
+        flex: 1;
+        font-size: 16px;
+        padding: 10px 15px;
+        border-radius: 20px;
+        border: 1px solid #ccc;
+        resize: none; /* ẩn nút resize góc */
+        overflow-y: auto; /* Cho phép cuộn nếu nội dung quá dài */
+        line-height: 1.4;
+        max-height: 120px; /* Giới hạn chiều cao tối đa */
+    }
+
+    #sendBtn {
+        background: #007bff;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background 0.3s;
+        height: 42px; /* Cố định chiều cao */
+        flex-shrink: 0; /* Không cho phép nút bị co lại */
+    }
+    #sendBtn:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🐶 Pet Health ChatBot</h2>
+
+  <div id="chatBox"></div>
+
+  <div id="inputArea">
+    <textarea id="userInput" rows="1" placeholder="Nhập tin nhắn..."></textarea>
+    <button id="sendBtn">Gửi</button>
+  </div>
+
+  <script>
+    const binaryCols = [
+    "Appetite_Loss", "Vomiting", "Diarrhea", "Coughing",
+    "Labored_Breathing", "Lameness", "Skin_Lesions",
+    "Nasal_Discharge", "Eye_Discharge",
+    "Weight_Loss", "Fever", "Lethargy"
+    ];
+    const chatBox = document.getElementById("chatBox");
+    const userInput = document.getElementById('userInput');
+        userInput.addEventListener('input', () => {
+        userInput.style.height = 'auto'; // reset height
+        userInput.style.height = userInput.scrollHeight + 'px'; // đặt lại chiều cao theo nội dung
+    });
+    const sendBtn = document.getElementById("sendBtn");
+    // Trạng thái
+    let followUpQuestions = [];
+    let answers = {};
+    let waitingForFollowUp = false;
+    let initialInput = null; 
+
+    // Thêm tin nhắn vào chatBox
+    function addMessage(text, fromUser = false) {
+      const msg = document.createElement("div");
+      msg.className = fromUser ? "message user-message" : "message bot-message";
+      msg.textContent = text;
+      chatBox.appendChild(msg);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    async function handlePredictionResponse(response) {
+        chatBox.lastChild.remove(); // Xóa "Đang xử lý..."
+        const result = await response.json();
+
+        if (result.error) {
+            addMessage("❌ Lỗi: " + result.error, false);
+        } else if (result.prediction) {
+            addMessage("🎯 Kết quả dự đoán: " + result.prediction +
+                (result.confidence !== undefined ?  ` (Độ tin cậy: ${(result.confidence * 100).toFixed(2)}%)` : ""), false);
+            followUpQuestions = [];
+            answers = {};
+            initialInput = null;
+            waitingForFollowUp = false;
+        } else if (result.questions) {
+            followUpQuestions = result.questions.slice();
+            waitingForFollowUp = true;
+            askNextQuestion();
+        } else if (result.ask_symptom_confirmation && result.symptoms) {
+            followUpQuestions = result.symptoms.slice();
+            waitingForFollowUp = true;
+
+            let symptomForm = document.createElement("form");
+            symptomForm.id = "symptomForm";
+
+            const instruction = document.createElement("p");
+            instruction.innerText = result.message || "Vui lòng chọn triệu chứng phù hợp.";
+            symptomForm.appendChild(instruction);
+
+            followUpQuestions.forEach((question, index) => {
+                const label = document.createElement("label");
+                label.style.display = "block";
+
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.name = "symptom";
+                checkbox.value = binaryCols[index];
+
+                label.appendChild(checkbox);
+                label.append(" " + question);
+                symptomForm.appendChild(label);
+            });
+
+            const submitBtn = document.createElement("button");
+            submitBtn.type = "submit";
+            submitBtn.innerText = "Gửi";
+            symptomForm.appendChild(submitBtn);
+
+            chatBox.appendChild(symptomForm);
+
+            symptomForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const selectedSymptoms = Array.from(symptomForm.elements["symptom"])
+                    .filter(input => input.checked)
+                    .map(input => input.value);
+
+                if (selectedSymptoms.length === 0) {
+                    answers["SYMPTOMS_UNKNOWN"] = 1;
+                } else {
+                    selectedSymptoms.forEach(symptom => {
+                        answers[symptom] = 1;
+                    });
+                }
+
+                addMessage("⏳ Đang xử lý...", false);
+                try {
+                    const res2 = await fetch("http://localhost:8000/predict", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            description: initialInput,
+                            answers: answers
+                        })
+                    });
+                    await handlePredictionResponse(res2);
+                } catch (error) {
+                    chatBox.lastChild.remove();
+                    addMessage("🚫 Lỗi khi gọi API: " + error.message, false);
+                }
+                // Xóa nút submit
+                const submitButton = symptomForm.querySelector('button[type="submit"]');
+                if (submitButton) {
+                    submitButton.remove();
+                }
+
+                // Disable tất cả checkbox triệu chứng
+                const checkboxes = symptomForm.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(checkbox => checkbox.disabled = true);
+            });
+        } else {
+            addMessage("⚠️ Không có kết quả.", false);
+        }
+    }
+
+    async function sendFollowUpAnswers() {
+        const data = { description: initialInput, answers: answers };
+        console.log("Gửi dữ liệu tới backend:", data);
+        addMessage("⏳ Đang xử lý...", false);
+        try {
+            const res = await fetch("http://localhost:8000/predict", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+            await handlePredictionResponse(res);
+        } catch (err) {
+            chatBox.lastChild.remove();
+            addMessage("🚫 Lỗi khi gọi API: " + err.message, false);
+        }
+    }
+
+    async function sendMessage() {
+        const input = userInput.value.trim();
+        if (!input) {
+            alert("Vui lòng nhập tin nhắn!");
+            return;
+        }
+
+        if (waitingForFollowUp && followUpQuestions.length > 0) {
+            const currentQuestion = followUpQuestions.shift();
+            answers[currentQuestion] = input; // ✅ lưu theo cặp key-value
+            addMessage(input, true);
+            userInput.value = "";
+
+            if (followUpQuestions.length === 0) {
+                waitingForFollowUp = false;
+                await sendFollowUpAnswers();
+            } else {
+                askNextQuestion();
+            }
+            return;
+        }
+
+        addMessage(input, true);
+
+        if (!initialInput) {
+            initialInput = input;
+        }
+        userInput.value = "";
+
+        const data = { description: initialInput, answers: answers };
+
+        addMessage("⏳ Đang xử lý...", false);
+        try {
+            const res = await fetch("http://localhost:8000/predict", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+            await handlePredictionResponse(res);
+        } catch (err) {
+            chatBox.lastChild.remove();
+            addMessage("🚫 Lỗi khi gọi API: " + err.message, false);
+        }
+    }
+
+    // Hiện câu hỏi tiếp theo
+    function askNextQuestion() {
+        if (followUpQuestions.length > 0) {
+            addMessage("📋 " + followUpQuestions[0], false);
+        }
+    }
+
+    // Xử lý nút gửi
+    sendBtn.onclick = () => {
+      sendMessage();
+    };
+
+    // Hỗ trợ Enter gửi tin nhắn
+    userInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendBtn.click();
+      }
+    });
+  </script>
+
+</body>
+</html>

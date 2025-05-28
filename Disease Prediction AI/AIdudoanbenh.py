@@ -110,6 +110,11 @@ joblib.dump(best_model, 'xgboost_best_model.pkl')
 # Lưu encoder
 joblib.dump(le, 'label_encoder.pkl')
 
+#Encoder dùng để biến đổi các cột phân loại thành số
+joblib.dump(te, 'target_encoder.pkl')
+# Chuẩn hóa dữ liệu số
+joblib.dump(scaler, 'scaler.pkl')
+
 # 14.
 # Huấn luyện lại best_model để lấy logloss trong quá trình huấn luyện
 eval_set = [(X_train, y_train), (X_test, y_test)]
@@ -135,6 +140,115 @@ results = best_model.evals_result()
 train_logloss = results['validation_0']['mlogloss']
 test_logloss = results['validation_1']['mlogloss']
 
+def preprocess_input(sample_dict):
+    """
+    Tiền xử lý dữ liệu đầu vào (sample_dict) thành dạng phù hợp với model.
+    sample_dict là dict chứa dữ liệu giống các cột trong df ban đầu (đã có 2 đặc trưng mới).
+    """
+
+    # Chuyển dict thành DataFrame 1 dòng
+    sample_df = pd.DataFrame([sample_dict])
+
+    # Làm sạch nhiệt độ (nếu có ký tự °C)
+    sample_df['Body_Temperature_C'] = sample_df['Body_Temperature_C'].astype(str).str.replace('°C', '', regex=False).astype(float)
+
+    # Chuyển Yes/No thành 1/0
+    for col in binary_cols:
+        sample_df[col] = sample_df[col].map({'Yes': 1, 'No': 0})
+
+    # Lúc này giả định sample_dict đã có 2 cột 'Temp_HR_Ratio' và 'Weight_Age_Ratio' rồi
+    # Nên không tạo lại đặc trưng mới ở đây nữa
+
+    # Mã hóa categorical bằng TargetEncoder đã fit
+    sample_df = te.transform(sample_df)
+
+    # Chuẩn hóa dữ liệu số
+    sample_df[numerical_cols] = scaler.transform(sample_df[numerical_cols])
+
+    return sample_df
+
+# Với dữ liệu mẫu nhập thủ công, bạn cũng phải tính 2 đặc trưng này rồi mới đưa vào hàm:
+sample_input = {
+    "Animal_Type": "Cat",
+    "Breed": "Maine Coon",
+    "Gender": "Female",
+    "Duration_Category": "Medium",
+    "Severity": "Mild",
+    "Season": "Winter",
+    "Living_Area": "Rural",
+    "Age_Years": 6.0,
+    "Weight_kg": 5.7,
+    "Duration_Days": 14,
+    "Body_Temperature_C": 38.62,
+    "Heart_Rate_BPM": 127.0,
+    "Appetite_Loss": 1,
+    "Vomiting": 0,
+    "Diarrhea": 0,
+    "Coughing": 0,
+    "Labored_Breathing": 0,
+    "Lameness": 0,
+    "Skin_Lesions": 0,
+    "Nasal_Discharge": 0,
+    "Eye_Discharge": 0,
+    "Weight_Loss": 0,
+    "Fever": 0,
+    "Lethargy": 0,
+}
+
+# Tính 2 đặc trưng mới cho sample_input
+sample_input['Temp_HR_Ratio'] = sample_input['Body_Temperature_C'] / (sample_input['Heart_Rate_BPM'] + 1)
+sample_input['Weight_Age_Ratio'] = sample_input['Weight_kg'] / (sample_input['Age_Years'] + 1)
+
+# Chuẩn bị danh sách cột theo thứ tự model cần
+feature_order = ['Animal_Type', 'Breed', 'Gender', 'Duration_Category', 'Severity', 'Season', 'Living_Area',
+                 'Age_Years', 'Weight_kg', 'Duration_Days', 'Body_Temperature_C', 'Heart_Rate_BPM',
+                 'Temp_HR_Ratio', 'Weight_Age_Ratio', 'Appetite_Loss', 'Vomiting', 'Diarrhea', 'Coughing',
+                 'Labored_Breathing', 'Lameness', 'Skin_Lesions', 'Nasal_Discharge', 'Eye_Discharge',
+                 'Weight_Loss', 'Fever', 'Lethargy']
+
+# Tiền xử lý dữ liệu mẫu (đã có 2 đặc trưng mới)
+X_sample = preprocess_input(sample_input)
+
+# Đảm bảo đúng thứ tự cột
+X_sample = X_sample[feature_order]
+
+# Dự đoán
+predicted_class_index = best_model.predict(X_sample)[0]
+predicted_class_name = le.inverse_transform([predicted_class_index])[0]
+predicted_proba = best_model.predict_proba(X_sample)[0]
+
+print(f"Dự đoán bệnh: {predicted_class_name}")
+print("Xác suất dự đoán các lớp:")
+check_row = {
+    'Animal_Type': 'Cat',
+    'Breed': 'Maine Coon',
+    'Gender': 'Female',
+    'Age_Years': 6,
+    'Weight_kg': 5.7,
+    'Duration_Days': 14,
+    'Duration_Category': 'Medium',
+    'Severity': 'Mild',
+    'Season': 'Winter',
+    'Living_Area': 'Rural',
+    'Body_Temperature_C': 38.62,
+    'Heart_Rate_BPM': 127
+}
+
+for cls, proba in zip(le.classes_, predicted_proba):
+    print(f"  {cls}: {proba:.4f}")
+def is_row_match(df, row_dict):
+    cond = np.ones(len(df), dtype=bool)
+    for key, val in row_dict.items():
+        cond &= (df[key] == val)
+    return df[cond]
+
+# Kiểm tra trong tập huấn luyện
+matched_train = is_row_match(X_train_raw, check_row)
+print("Số dòng trùng trong tập train:", len(matched_train))
+
+# Kiểm tra trong tập kiểm thử
+matched_test = is_row_match(X_test_raw, check_row)
+print("Số dòng trùng trong tập test:", len(matched_test))
 # Vẽ biểu đồ logloss
 plt.figure()
 plt.plot(train_logloss, label='Train Logloss')
