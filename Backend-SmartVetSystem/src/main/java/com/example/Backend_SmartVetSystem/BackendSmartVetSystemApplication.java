@@ -19,6 +19,7 @@ public class BackendSmartVetSystemApplication {
 		System.setProperty("SENDGRID_API_KEY", dotenv.get("SENDGRID_API_KEY"));
 		System.setProperty("FROM_EMAIL", dotenv.get("FROM_EMAIL"));
 		System.setProperty("SIGNER_KEY", dotenv.get("SIGNER_KEY"));
+		System.setProperty("DOMAIN_FE", dotenv.get("DOMAIN_FE"));
 		SpringApplication.run(BackendSmartVetSystemApplication.class, args);
 	}
 

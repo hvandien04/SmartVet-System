@@ -14,6 +14,7 @@ import com.example.Backend_SmartVetSystem.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,6 +57,10 @@ public class MedicalRecordService {
 
     public MedicalRecordResponse getMedicalRecord(String recordId) {
         return medicalRecordMapper.toMedicalRecordResponse(medicalRecordRepository.findById(recordId).orElseThrow(()-> new AppException(ErrorCode.MEDICAL_RECORD_NOT_FOUND)));
+    }
+
+    public List<MedicalRecordResponse> getMedicalRecordByVisitDate(Instant visitDate) {
+        return medicalRecordRepository.findByVisitDate(visitDate).stream().map(medicalRecordMapper::toMedicalRecordResponse).collect(Collectors.toList());
     }
 
     public String deleteMedicalRecord(String recordId) {

@@ -7,6 +7,7 @@ import com.example.Backend_SmartVetSystem.service.MedicalRecordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -47,6 +48,14 @@ public class MedicalRecordController {
     ApiResponse<String> deleteMedicalRecord(@PathVariable String recordId) {
         return ApiResponse.<String>builder()
                 .result(medicalRecordService.deleteMedicalRecord(recordId))
+                .build();
+    }
+
+    @GetMapping("/date/{date}")
+    ApiResponse<List<MedicalRecordResponse>> getMedicalRecordByDate(@PathVariable String date) {
+        Instant visitDate = Instant.parse(date);
+        return ApiResponse.<List<MedicalRecordResponse>>builder()
+                .result(medicalRecordService.getMedicalRecordByVisitDate(visitDate))
                 .build();
     }
 

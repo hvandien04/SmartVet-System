@@ -1,8 +1,6 @@
 package com.example.Backend_SmartVetSystem.service;
 
-import com.example.Backend_SmartVetSystem.dto.request.UserCreateRequest;
-import com.example.Backend_SmartVetSystem.dto.request.UserUpdatePasswordRequest;
-import com.example.Backend_SmartVetSystem.dto.request.UserUpdateRequest;
+import com.example.Backend_SmartVetSystem.dto.request.*;
 import com.example.Backend_SmartVetSystem.dto.response.UserResponse;
 import com.example.Backend_SmartVetSystem.entity.User;
 import com.example.Backend_SmartVetSystem.exception.AppException;
@@ -16,7 +14,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.AbstractMap;
 import java.util.List;
+import java.util.Optional;
+import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +32,8 @@ public class UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final IdGeneratorService idGeneratorService;
+    private final EmailService emailService;
+    private final ConcurrentHashMap<String, AbstractMap.SimpleEntry<String, LocalDateTime>> verificationCodes = new ConcurrentHashMap<>();
 
     @PreAuthorize("hasRole('ADMIN')")
     public UserResponse createUser(UserCreateRequest request) {
@@ -76,5 +82,51 @@ public class UserService {
         return userRepository.findAll().stream().map(userMapper::toUserResponse).collect(Collectors.toList());
     }
 
+    private String generateVerificationCode() {
+        int length = 6;
+        String characters = "0123456789";
+        Random random = new Random();
+        StringBuilder code = new StringBuilder();
+
+        for (int i = 0; i < length; i++) {
+            code.append(characters.charAt(random.nextInt(characters.length())));
+        }
+
+        return code.toString();
+    }
+
+    public void generateVerificationCode(ForgotPasswordRequest request) throws IOException {
+        userRepository.findByEmail(request.getEmail()).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_FOUND));
+        String code = generateVerificationCode();
+        LocalDateTime expiry = LocalDateTime.now().plusMinutes(10);
+        emailService.sendResetCode(request.getEmail(),code);
+        verificationCodes.put(request.getEmail(), new AbstractMap.SimpleEntry<>(code, expiry));
+    }
+
+    public void resetPassword(String email, String newPassword) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setPasswordHash(passwordEncoder.encode(newPassword));
+            userRepository.save(user);
+        }
+    }
+
+    public boolean verifyCode(String email, String code) {
+        AbstractMap.SimpleEntry<String, LocalDateTime> entry = verificationCodes.get(email);
+        if (entry == null) throw new AppException(ErrorCode.INVALID_CONFIRMATION_CODE);
+        if (LocalDateTime.now().isAfter(entry.getValue())) {
+            verificationCodes.remove(email);
+            throw new AppException(ErrorCode.INVALID_CONFIRMATION_CODE);
+        }
+        if (!entry.getKey().equals(code)) {
+            throw new AppException(ErrorCode.INVALID_CONFIRMATION_CODE);
+        }
+        return true;
+    }
+
+    public void clearCode(String email) {
+        verificationCodes.remove(email);
+    }
 
 }

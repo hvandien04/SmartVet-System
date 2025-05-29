@@ -17,6 +17,7 @@ public enum ErrorCode {
     OWNER_NOT_FOUND(1007, "Owner not found", HttpStatus.NOT_FOUND),
     PET_NOT_FOUND(1008, "Pet not found", HttpStatus.NOT_FOUND),
     MEDICAL_RECORD_NOT_FOUND(1009, "Medical record not found", HttpStatus.NOT_FOUND),
+    INVALID_CONFIRMATION_CODE(1010, "The confirmation code is incorrect or has expired.", HttpStatus.NOT_FOUND),
     ;
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
