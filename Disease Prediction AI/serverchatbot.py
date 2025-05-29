@@ -302,6 +302,9 @@ def find_missing_fields(features):
 
     return missing
 
+@app.route("/", methods=["GET"])
+def home():
+    return {"message": "Hello from SmartVet AI!"}, 200
 @app.route("/predict", methods=["GET", "POST"])
 def predict():
     try:
