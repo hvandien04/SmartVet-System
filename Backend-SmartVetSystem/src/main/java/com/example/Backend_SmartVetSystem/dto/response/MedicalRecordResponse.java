@@ -1,19 +1,19 @@
 package com.example.Backend_SmartVetSystem.dto.response;
 
-import com.example.Backend_SmartVetSystem.entity.Pet;
-import com.example.Backend_SmartVetSystem.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class MedicalRecordResponse {
+    private String recordId;
     private PetResponse pet;
     private UserResponse user;
     private Instant visitDate;
@@ -39,5 +39,5 @@ public class MedicalRecordResponse {
     private Instant nextVisitDate;
     private String noteForOwner;
     private String status;
-
+    private List<MedicalImageResponse> medicalImages;
 }

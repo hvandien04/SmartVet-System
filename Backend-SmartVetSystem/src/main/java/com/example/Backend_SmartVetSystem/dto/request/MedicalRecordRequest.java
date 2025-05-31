@@ -3,6 +3,7 @@ package com.example.Backend_SmartVetSystem.dto.request;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -34,5 +35,5 @@ public class MedicalRecordRequest {
     private Instant nextVisitDate;
     private String noteForOwner;
     private String status;
-
+    private List<MedicalImageRequest> medicalImageRequest;
 }

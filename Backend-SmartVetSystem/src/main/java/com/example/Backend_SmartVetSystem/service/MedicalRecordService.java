@@ -2,12 +2,15 @@ package com.example.Backend_SmartVetSystem.service;
 
 import com.example.Backend_SmartVetSystem.dto.request.MedicalRecordRequest;
 import com.example.Backend_SmartVetSystem.dto.response.MedicalRecordResponse;
+import com.example.Backend_SmartVetSystem.entity.MedicalImage;
 import com.example.Backend_SmartVetSystem.entity.MedicalRecord;
 import com.example.Backend_SmartVetSystem.entity.Pet;
 import com.example.Backend_SmartVetSystem.entity.User;
 import com.example.Backend_SmartVetSystem.exception.AppException;
 import com.example.Backend_SmartVetSystem.exception.ErrorCode;
+import com.example.Backend_SmartVetSystem.mapper.MedicalImageMapper;
 import com.example.Backend_SmartVetSystem.mapper.MedicalRecordMapper;
+import com.example.Backend_SmartVetSystem.repository.MedicalImageRepository;
 import com.example.Backend_SmartVetSystem.repository.MedicalRecordRepository;
 import com.example.Backend_SmartVetSystem.repository.PetRepository;
 import com.example.Backend_SmartVetSystem.repository.UserRepository;
@@ -26,6 +29,8 @@ public class MedicalRecordService {
     private final MedicalRecordMapper medicalRecordMapper;
     private final UserRepository userRepository;
     private final PetRepository petRepository;
+    private final MedicalImageMapper medicalImageMapper;
+    private final MedicalImageRepository medicalImageRepository;
 
     public MedicalRecordResponse createMedicalRecord(MedicalRecordRequest medicalRecordRequest) {
         MedicalRecord medicalRecord = medicalRecordMapper.toMedicalRecord(medicalRecordRequest);
@@ -34,7 +39,22 @@ public class MedicalRecordService {
         Pet pet = petRepository.findById(medicalRecordRequest.getPetId()).orElseThrow(()-> new AppException(ErrorCode.PET_NOT_FOUND));
         medicalRecord.setPet(pet);
         medicalRecord.setUser(user);
-        return medicalRecordMapper.toMedicalRecordResponse(medicalRecordRepository.save(medicalRecord));
+        medicalRecord = medicalRecordRepository.save(medicalRecord);
+
+        if(medicalRecordRequest.getMedicalImageRequest() != null) {
+            MedicalRecord finalMedicalRecord = medicalRecord;
+            List<MedicalImage> images = medicalRecordRequest.getMedicalImageRequest().stream()
+                    .map(img -> {
+                        MedicalImage medicalImage = medicalImageMapper.toMedicalImage(img);
+                        medicalImage.setImageId(idGeneratorService.generateRandomId("IMG",medicalRecordRepository::existsById));
+                        medicalImage.setUploadedAt(Instant.now());
+                        medicalImage.setRecord(finalMedicalRecord);
+                        return medicalImage;
+                    })
+                    .toList();
+            medicalImageRepository.saveAll(images);
+        }
+        return medicalRecordMapper.toMedicalRecordResponse(medicalRecord);
     }
 
     public MedicalRecordResponse updateMedicalRecord(String recordId, MedicalRecordRequest medicalRecordRequest) {
