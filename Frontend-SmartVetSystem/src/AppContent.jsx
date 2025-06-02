@@ -1,32 +1,47 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { refreshToken, introspectToken } from './services/authService'; // introspect là tùy chọn
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-
-    // Khôi phục user từ localStorage nếu đã đăng nhập trước đó
-    useEffect(() => {
-        const savedUser = localStorage.getItem('user');
-        if (savedUser) {
-            setUser(JSON.parse(savedUser));
-        }
-    }, []);
+    const [accessToken, setAccessToken] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     const login = (userData, token) => {
-        localStorage.setItem('user', JSON.stringify(userData));
-        localStorage.setItem('token', token);
         setUser(userData);
+        setAccessToken(token);
     };
 
     const logout = () => {
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
         setUser(null);
+        setAccessToken(null);
+        // Optional: gọi API logout hoặc xóa cookie nếu dùng cookie-based
     };
 
+    useEffect(() => {
+        const tryRefreshToken = async () => {
+            try {
+                const newToken = await refreshToken();
+                setAccessToken(newToken);
+
+                const userInfo = await introspectToken(newToken);
+                setUser(userInfo);
+            } catch (err) {
+                console.warn('Không thể làm mới token:', err.message);
+                logout(); // clear state nếu fail
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        tryRefreshToken();
+    }, []);
+
+    if (loading) return <div>Loading...</div>;
+
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthContext.Provider value={{ user, accessToken, login, logout, setAccessToken }}>
             {children}
         </AuthContext.Provider>
     );

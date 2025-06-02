@@ -36,7 +36,6 @@ public class AuthenticationService {
     public final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     public final SimpMessagingTemplate messagingTemplate;
 
-
     @NonFinal
     @Value("${jwt.signerKey}")
     protected String SIGNER_KEY;
@@ -136,8 +135,6 @@ public class AuthenticationService {
         }
     }
 
-
-
     private SignedJWT verifyToken(String token, boolean isRefresh) throws ParseException, JOSEException {
         JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
         SignedJWT signedJWT = SignedJWT.parse(token);
@@ -163,15 +160,27 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse refreshAccessToken(String refreshToken) throws ParseException, JOSEException {
+        System.out.println("Verifying refresh token...");
         SignedJWT signedJWT = verifyToken(refreshToken,true);
+        System.out.println("Refresh token verified successfully");
+
         String username = signedJWT.getJWTClaimsSet().getSubject();
-        var user = userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        System.out.println("Username from token: " + username);
+
+        var user = userRepository.findByUsername(username)
+                .orElseThrow(() -> {
+                    System.out.println("User not found for username: " + username);
+                    return new AppException(ErrorCode.USER_NOT_FOUND);
+                });
+
+        System.out.println("Generating new access token for user: " + user.getUsername());
+
         return AuthenticationResponse.builder()
                 .authenticated(true)
                 .token(generateToken(user))
                 .refreshToken(refreshToken)
                 .build();
-
     }
+
 
 }

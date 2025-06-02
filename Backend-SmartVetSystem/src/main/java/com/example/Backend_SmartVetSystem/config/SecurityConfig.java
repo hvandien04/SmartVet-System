@@ -29,8 +29,14 @@ public class SecurityConfig {
     private String SIGNER_KEY;
 
     private final String[] PUBLIC_ENDPOINTS = {
-             "/auth","/user/forgot-password","/user/verify-code", "/user/reset-password"
+            "/auth",
+            "/auth/logout",
+            "/auth/refresh-token",
+            "/user/forgot-password",
+            "/user/verify-code",
+            "/user/reset-password"
     };
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {

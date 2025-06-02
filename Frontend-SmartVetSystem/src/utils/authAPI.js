@@ -2,20 +2,19 @@ import axios from 'axios';
 
 export const authService = {
     login: async (email, password) => {
-        const res = await axios.post('/api/login', { email, password });
-        localStorage.setItem('token', res.data.token);
-        return true;
+        const res = await axios.post('/api/login', { email, password }, { withCredentials: true });
+        return res.data.result.accessToken;  // Cấu trúc tùy backend
     },
 
-    getCurrentUser: async () => {
-        const token = localStorage.getItem('token');
+    getCurrentUser: async (token) => {
         const res = await axios.get('/api/user', {
             headers: { Authorization: `Bearer ${token}` },
+            withCredentials: true,
         });
         return res.data;
     },
 
-    logout: () => {
-        localStorage.removeItem('token');
-    }
+    logout: async () => {
+        await axios.post('/api/logout', {}, { withCredentials: true });
+    },
 };

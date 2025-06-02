@@ -10,10 +10,11 @@ import imgSmall1 from '../assets/img-small1.png';
 import imgSmall2 from '../assets/img-small2.png';
 import { login as loginService } from '../services/authService';
 import { useNavigate } from 'react-router-dom';
+import { attachInterceptors } from '../api/axiosConfig';
 
 function Login() {
     const [formData, setFormData] = useState({
-        email: '',
+        username: '',
         password: '',
     });
     const [showPassword, setShowPassword] = useState(false);
@@ -33,13 +34,14 @@ function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const { token, user } = await loginService(formData.email, formData.password);
+            const { token, user } = await loginService(formData.username, formData.password);
 
             // 👉 Sử dụng context để set user
             loginContext(user, token);
+            attachInterceptors(token, loginContext); // Đính token vào axios
 
             alert('Login successful!');
-            navigate('/dashboard');
+            navigate('/');
         } catch (error) {
             alert(error.message || 'Login failed');
         }
@@ -77,10 +79,10 @@ function Login() {
                         <div className="textbox">
                             <FaEnvelope className="textbox-icon left" />
                             <input
-                                type="email"
-                                name="email"
-                                placeholder="What is your e-mail?"
-                                value={formData.email}
+                                type="text"
+                                name="username"
+                                placeholder="What is your username?"
+                                value={formData.username}
                                 onChange={handleChange}
                                 required
                             />

@@ -2,10 +2,10 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import Home from './pages/Home';
 import Register from './pages/Register';
-import ForgotPassword from './pages/ForgotPassword'; // 👈 Thêm dòng này
-import ResetPassword from './pages/ResetPassword'; // 👈 Thêm dòng này
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import './App.css';
-import { AuthProvider } from './context/AuthContext'; // 👈 Thêm dòng này
+import { AuthProvider } from './context/AuthContext';
 
 function App() {
     return (
@@ -19,7 +19,7 @@ function App() {
                     <Route path="/reset-password" element={<ResetPassword />} />
                 </Routes>
             </Router>
-        </AuthProvider> // ✅ Đóng thẻ đúng cách
+        </AuthProvider>
     );
 }
 

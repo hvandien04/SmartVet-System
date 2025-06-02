@@ -1,4 +1,6 @@
-// Dữ liệu giả lập người dùng
+// authService.js
+
+// Dữ liệu người dùng giả lập (chỉ dùng demo)
 let dummyUser = {
     email: 'test@example.com',
     password: '123456',
@@ -7,28 +9,109 @@ let dummyUser = {
     otp: '123456', // mã OTP giả lập
 };
 
-// Đăng nhập (giả lập)
-export const login = async (email, password) => {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            if (email === dummyUser.email && password === dummyUser.password) {
-                resolve({
-                    token: 'mock-jwt-token-12345',
-                    user: {
-                        email: dummyUser.email,
-                        name: dummyUser.name,
-                        role: dummyUser.role,
-                    }
-                });
-            } else {
-                reject(new Error('Email or password is incorrect'));
-            }
-        }, 500);
+// Hàm login, trả về access token + user info
+export const login = async (username, password) => {
+    const response = await fetch('http://localhost:8080/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // gửi cookie (refresh token) với request
+        body: JSON.stringify({ username, password })
     });
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Login failed');
+    }
+
+    const data = await response.json();
+
+    // data.result.token = access token
+    // data.result.user = thông tin user
+    return {
+        token: data.result.token,
+        user: data.result.user
+    };
 };
 
-// Đăng ký (giả lập)
-export const registerDummy = async (email, password, name) => {
+export const refreshToken = async () => {
+    const res = await fetch('http://localhost:8080/auth/refresh-token', {
+        method: 'POST',
+        credentials: 'include',
+    });
+
+    if (!res.ok) {
+        console.error('Refresh token failed with status:', res.status);
+        throw new Error(`Failed to refresh token (${res.status})`);
+    }
+
+    const text = await res.text();
+    console.log('Raw refresh token response text:', text);
+
+    if (!text) {
+        console.error('Refresh token response body empty');
+        throw new Error('Empty response body');
+    }
+
+    let data;
+    try {
+        data = JSON.parse(text);
+    } catch (err) {
+        console.error('Failed to parse JSON:', err);
+        throw new Error('Invalid JSON in refresh token response');
+    }
+
+    console.log('Parsed refresh token response:', data);
+
+    // Lấy token từ data.result.token thay vì data.accessToken
+    if (!data.result || !data.result.token) {
+        console.error('token missing in refresh token response');
+        throw new Error('No token in refresh token response');
+    }
+
+    return data.result.token;  // <-- sửa ở đây
+};
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+export async function logout() {
+    const accessToken = localStorage.getItem('accessToken');
+    const refreshToken = getCookie('refresh_token');
+
+    const introspectRequest = {
+        token: accessToken || '',
+        refreshToken: refreshToken || '',
+    };
+
+    try {
+        const response = await fetch('http://localhost:8080/auth/logout', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`,  // thêm header này
+            },
+            body: JSON.stringify(introspectRequest),
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Logout failed response:', errorText);
+            throw new Error('Logout failed');
+        }
+
+        return true;
+    } catch (error) {
+        console.error('Logout error:', error);
+        throw new Error('Logout failed');
+    }
+}
+
+// Các hàm giả lập cho demo, bạn có thể dùng hoặc bỏ qua
+
+const registerDummy = async (email, password, name) => {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             if (email === dummyUser.email) {
@@ -48,7 +131,6 @@ export const registerDummy = async (email, password, name) => {
     });
 };
 
-// Quên mật khẩu (giả lập)
 export const forgotPassword = async (email) => {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
@@ -61,8 +143,7 @@ export const forgotPassword = async (email) => {
     });
 };
 
-// Xác nhận mã OTP (giả lập)
-export const verifyEmailOtpDummy = async (email, otp) => {
+const verifyEmailOtpDummy = async (email, otp) => {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             if (email === dummyUser.email) {
@@ -78,22 +159,15 @@ export const verifyEmailOtpDummy = async (email, otp) => {
     });
 };
 
-// Lấy headers có chứa token (giả lập)
-export const getAuthHeaders = () => {
-    const token = localStorage.getItem('token');
-    return {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-    };
-};
+export const getAuthHeaders = (token) => ({
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`,
+});
 
-// Hàm register giả lập (thay thế hàm backend)
 export async function register(username, email, password) {
-    // username map với name
     return registerDummy(email, password, username);
 }
 
-// Hàm verify OTP giả lập (thay thế hàm backend)
 export async function verifyEmailOtp(email, otp) {
     return verifyEmailOtpDummy(email, otp);
 }

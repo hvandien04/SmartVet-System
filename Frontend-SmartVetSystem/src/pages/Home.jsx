@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,9 +6,17 @@ const Home = () => {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
 
-    const handleLogout = () => {
-        logout(); // Gọi hàm logout từ context
-        navigate('/login'); // Điều hướng về trang đăng nhập
+    useEffect(() => {
+        console.log('User info from context:', user);
+    }, [user]);
+
+    const handleLogout = async () => {
+        await logout();
+        navigate('/login');
+    };
+
+    const handleGoToLogin = () => {
+        navigate('/login');
     };
 
     return (
@@ -17,10 +25,15 @@ const Home = () => {
             {user ? (
                 <>
                     <p>Xin chào, {user.name || user.email}!</p>
+                    <p><strong>ID:</strong> {user.id}</p>
+                    <p><strong>Email:</strong> {user.email}</p>
                     <button onClick={handleLogout}>Đăng xuất</button>
                 </>
             ) : (
-                <p>Bạn chưa đăng nhập.</p>
+                <>
+                    <p>Bạn chưa đăng nhập.</p>
+                    <button onClick={handleGoToLogin}>Quay về trang đăng nhập</button>
+                </>
             )}
         </div>
     );

@@ -30,7 +30,7 @@ public class AuthenticationController {
     public ApiResponse<AuthenticationResponse> login(@RequestBody AuthenticationRequest request, HttpServletResponse response) {
         AuthenticationResponse authenticationResponse = authenticationService.login(request);
         ResponseCookie refreshCookie = ResponseCookie.from("refresh_token",authenticationResponse.getRefreshToken())
-                .secure(true)
+                .secure(false)
                 .httpOnly(true)
                 .maxAge(30*24*60*60)
                 .path("/")
@@ -43,22 +43,32 @@ public class AuthenticationController {
     }
 
     @PostMapping("/logout")
-    ApiResponse <Void> logout(@RequestBody IntrospectRequest request,@CookieValue(name = "refresh_token",required = false) String refreshToken, HttpServletResponse response) throws ParseException, JOSEException {
+    ApiResponse<Void> logout(@RequestBody IntrospectRequest request,
+                             @CookieValue(name = "refresh_token", required = false) String refreshToken,
+                             HttpServletResponse response) throws ParseException, JOSEException {
+        System.out.println("Received logout request with body: " + request);
+        System.out.println("Received refresh token from cookie: " + refreshToken);
+
+        // Gọi service logout
         authenticationService.logout(request, refreshToken);
-        ResponseCookie clearCookie = ResponseCookie.from("refresh_token","")
-                .secure(true)
+
+        // Xóa cookie refresh_token
+        ResponseCookie clearCookie = ResponseCookie.from("refresh_token", "")
+                .secure(false)
                 .httpOnly(true)
                 .maxAge(0)
                 .path("/")
                 .build();
         response.setHeader(HttpHeaders.SET_COOKIE, clearCookie.toString());
-        return ApiResponse.<Void>builder()
-                .build();
+
+        return ApiResponse.<Void>builder().build();
     }
+
 
     @PostMapping("/refresh-token")
     public ApiResponse<AuthenticationResponse> refreshToken(
             @CookieValue(name = "refresh_token", required = false) String refreshToken) throws ParseException, JOSEException {
+        System.out.println("Refresh token from cookie: " + refreshToken);
         if (refreshToken == null) {
             throw new AppException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
@@ -67,5 +77,6 @@ public class AuthenticationController {
                 .result(newAccessToken)
                 .build();
     }
+
 
 }
