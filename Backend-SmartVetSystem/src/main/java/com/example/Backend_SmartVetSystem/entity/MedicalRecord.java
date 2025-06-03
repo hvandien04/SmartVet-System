@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
+import java.util.List;
 
 @Getter
 @Setter
@@ -108,5 +109,8 @@ public class MedicalRecord {
     @Lob
     @Column(name = "status")
     private String status;
+
+    @OneToMany(mappedBy = "record", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<MedicalImage> medicalImages;
 
 }
