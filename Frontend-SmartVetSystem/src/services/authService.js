@@ -1,5 +1,3 @@
-// authService.js
-
 // Dữ liệu người dùng giả lập (chỉ dùng demo)
 let dummyUser = {
     email: 'test@example.com',
@@ -9,13 +7,30 @@ let dummyUser = {
     otp: '123456', // mã OTP giả lập
 };
 
+export async function fetchUserInfo(accessToken) {
+    const response = await fetch('http://localhost:8080/user', {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to fetch user info');
+    }
+
+    const data = await response.json();
+    return data.result; // UserResponse object
+}
+
 // Hàm login, trả về access token + user info
 export const login = async (username, password) => {
     const response = await fetch('http://localhost:8080/auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include', // gửi cookie (refresh token) với request
-        body: JSON.stringify({ username, password })
+        credentials: 'include', // gửi cookie (refresh token)
+        body: JSON.stringify({ username, password }),
     });
 
     if (!response.ok) {
@@ -24,12 +39,18 @@ export const login = async (username, password) => {
     }
 
     const data = await response.json();
+    const token = data.result.token;
 
-    // data.result.token = access token
-    // data.result.user = thông tin user
+    // Gọi fetchUserInfo để lấy thông tin người dùng từ /user endpoint
+    const user = await fetchUserInfo(token);
+
+    // Log ra để kiểm tra
+    console.log('User info from fetchUserInfo:', user);
+    console.log('Access token:', token);
+
     return {
-        token: data.result.token,
-        user: data.result.user
+        token,
+        user
     };
 };
 
@@ -68,7 +89,7 @@ export const refreshToken = async () => {
         throw new Error('No token in refresh token response');
     }
 
-    return data.result.token;  // <-- sửa ở đây
+    return data.result.token;
 };
 function getCookie(name) {
     const value = `; ${document.cookie}`;
@@ -76,8 +97,9 @@ function getCookie(name) {
     if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
-export async function logout() {
-    const accessToken = localStorage.getItem('accessToken');
+
+// Hàm logout nhận accessToken từ context
+export async function logout(accessToken) {
     const refreshToken = getCookie('refresh_token');
 
     const introspectRequest = {
@@ -85,32 +107,27 @@ export async function logout() {
         refreshToken: refreshToken || '',
     };
 
-    try {
-        const response = await fetch('http://localhost:8080/auth/logout', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`,  // thêm header này
-            },
-            body: JSON.stringify(introspectRequest),
-        });
+    const response = await fetch('http://localhost:8080/auth/logout', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(introspectRequest),
+    });
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('Logout failed response:', errorText);
-            throw new Error('Logout failed');
-        }
-
-        return true;
-    } catch (error) {
-        console.error('Logout error:', error);
+    if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Logout failed response:', errorText);
         throw new Error('Logout failed');
     }
+
+    return true;
 }
 
-// Các hàm giả lập cho demo, bạn có thể dùng hoặc bỏ qua
 
+// Các hàm giả lập cho demo, bạn có thể dùng hoặc bỏ qua
 const registerDummy = async (email, password, name) => {
     return new Promise((resolve, reject) => {
         setTimeout(() => {

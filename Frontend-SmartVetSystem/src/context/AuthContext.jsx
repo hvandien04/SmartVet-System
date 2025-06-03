@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { refreshToken } from '../services/authService';
 import { logout as logoutService } from '../services/authService'; // import logout
+import {fetchUserInfo as fetchUserInfo} from '../services/authService';
 
 const AuthContext = createContext();
 
@@ -9,41 +10,27 @@ export const AuthProvider = ({ children }) => {
     const [accessToken, setAccessToken] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    async function fetchUserInfo(accessToken) {
-        const response = await fetch('http://localhost:8080/user', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${accessToken}`,
-                'Content-Type': 'application/json',
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to fetch user info');
-        }
-
-        const data = await response.json();
-        return data.result; // UserResponse object
-    }
-
 
     const login = (userData, token) => {
         setUser(userData);
-        setAccessToken(token);
-        localStorage.setItem('accessToken', token);
+        setAccessToken(token); // lưu vào state (RAM)
     };
 
+
     const logout = async () => {
+        if (!accessToken) {
+            console.warn("Không có accessToken, bỏ qua logout");
+            return;
+        }
+
         try {
-            await logoutService();
-            setUser(null); // xóa user khỏi context
-            // Có thể xóa token localStorage nếu bạn lưu
-            localStorage.removeItem('access_token');
+            await logoutService(accessToken); // truyền token từ context
+            setUser(null);
+            setAccessToken(null);
         } catch (error) {
             console.error('Logout failed', error);
         }
-    }
-
+    };
 
     useEffect(() => {
         let mounted = true;
@@ -61,7 +48,6 @@ export const AuthProvider = ({ children }) => {
                 if (!mounted) return;
 
                 setAccessToken(newToken);
-                localStorage.setItem('accessToken', newToken);
 
                 const userInfo = await fetchUserInfo(newToken);
                 if (!mounted) return;
@@ -71,9 +57,9 @@ export const AuthProvider = ({ children }) => {
             } catch (err) {
                 if (!mounted) return;
                 console.warn('Token refresh failed:', err.message);
+                
                 setUser(null);
                 setAccessToken(null);
-                localStorage.removeItem('accessToken');
             } finally {
                 if (mounted) setLoading(false);
                 console.log('Token refresh process finished');

@@ -20,7 +20,6 @@ function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
-    // 👉 lấy hàm login từ AuthContext
     const { login: loginContext } = useAuth();
 
     const handleChange = (e) => {
@@ -36,7 +35,6 @@ function Login() {
         try {
             const { token, user } = await loginService(formData.username, formData.password);
 
-            // 👉 Sử dụng context để set user
             loginContext(user, token);
             attachInterceptors(token, loginContext); // Đính token vào axios
 
