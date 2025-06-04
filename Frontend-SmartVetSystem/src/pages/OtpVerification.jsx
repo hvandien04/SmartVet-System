@@ -16,8 +16,7 @@ function OtpVerification({
         if (typeof onResend === 'function') {
             onResend();
         } else {
-            alert('OTP resent to your email (mock).');
-            console.log(`Mock resend OTP to ${email}`);
+            alert('OTP resent to your email.');
         }
     };
 

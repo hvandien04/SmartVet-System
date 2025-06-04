@@ -3,11 +3,10 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
-    const { user, logout, loading } = useAuth(); // Thêm loading
+    const { user, logout } = useAuth(); // Thêm loading
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log('User info from context:', user);
     }, [user]);
 
     const handleLogout = async () => {
@@ -18,8 +17,6 @@ const Home = () => {
     const handleGoToLogin = () => {
         navigate('/login');
     };
-
-    if (loading) return <div>Đang tải dữ liệu người dùng...</div>; // Hiển thị loading
 
     return (
         <div style={{ padding: '2rem' }}>

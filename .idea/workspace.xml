@@ -6,8 +6,16 @@
   <component name="ChangeListManager">
     <list default="true" id="7f26f030-429d-4829-acb5-d77069e980aa" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend-SmartVetSystem/src/main/java/com/example/Backend_SmartVetSystem/controller/AuthenticationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend-SmartVetSystem/src/main/java/com/example/Backend_SmartVetSystem/controller/AuthenticationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend-SmartVetSystem/src/main/java/com/example/Backend_SmartVetSystem/service/AuthenticationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend-SmartVetSystem/src/main/java/com/example/Backend_SmartVetSystem/service/AuthenticationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/AppContent.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/AppContent.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/context/AuthContext.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/context/AuthContext.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/pages/ForgotPassword.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/pages/ForgotPassword.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/pages/Home.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/pages/Home.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/pages/OtpVerification.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/pages/OtpVerification.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/pages/Register.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/pages/ResetPassword.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/pages/ResetPassword.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/services/authService.js" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/services/authService.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -104,7 +112,11 @@
       <workItem from="1748857304065" duration="2725000" />
       <workItem from="1748861473480" duration="3038000" />
       <workItem from="1748864771890" duration="20371000" />
-      <workItem from="1748918154509" duration="6265000" />
+      <workItem from="1748918154509" duration="7022000" />
+      <workItem from="1749022045818" duration="5393000" />
+      <workItem from="1749029492030" duration="2492000" />
+      <workItem from="1749032499423" duration="82000" />
+      <workItem from="1749033172624" duration="4102000" />
     </task>
     <servers />
   </component>

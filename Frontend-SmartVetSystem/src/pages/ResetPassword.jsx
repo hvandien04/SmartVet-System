@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaLock } from 'react-icons/fa';
 import { IoEyeSharp, IoEyeOffSharp } from 'react-icons/io5';
-import '../styles/Login.css';
 import { FiGlobe, FiHelpCircle } from 'react-icons/fi';
 import logo from '../assets/logo.png';
 import imgMain from '../assets/img-main.png';
 import imgSmall1 from '../assets/img-small1.png';
 import imgSmall2 from '../assets/img-small2.png';
+import '../styles/Login.css';
+import { resetPassword } from '../services/authService';
 
 function ResetPassword() {
     const [password, setPassword] = useState('');
@@ -14,23 +15,40 @@ function ResetPassword() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [email, setEmail] = useState('');
+    const [code, setCode] = useState('');
+
+    // Lấy email và code từ URL query string
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        setEmail(params.get('email') || '');
+        setCode(params.get('code') || '');
+    }, []);
 
     const toggleShowPassword = () => setShowPassword(!showPassword);
     const toggleShowConfirmPassword = () => setShowConfirmPassword(!showConfirmPassword);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (password !== confirmPassword) {
             alert('Passwords do not match!');
             return;
         }
-        setLoading(true);
-        // Giả lập delay khi reset mật khẩu thành công
-        setTimeout(() => {
-            setLoading(false);
+        if (!email || !code) {
+            alert('Invalid or missing reset link.');
+            return;
+        }
+
+        try {
+            setLoading(true);
+            await resetPassword(email, code, password);
             alert('Password reset successful! You can now log in.');
             window.location.href = '/login';
-        }, );
+        } catch (error) {
+            alert(error.message || 'Something went wrong.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (

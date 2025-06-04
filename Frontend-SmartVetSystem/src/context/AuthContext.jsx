@@ -8,7 +8,6 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [accessToken, setAccessToken] = useState(null);
-    const [loading, setLoading] = useState(true);
 
 
     const login = (userData, token) => {
@@ -19,7 +18,6 @@ export const AuthProvider = ({ children }) => {
 
     const logout = async () => {
         if (!accessToken) {
-            console.warn("Không có accessToken, bỏ qua logout");
             return;
         }
 
@@ -27,19 +25,16 @@ export const AuthProvider = ({ children }) => {
             await logoutService(accessToken); // truyền token từ context
             setUser(null);
             setAccessToken(null);
-        } catch (error) {
-            console.error('Logout failed', error);
-        }
+            // eslint-disable-next-line no-unused-vars
+        } catch (error) { /* empty */ }
     };
 
     useEffect(() => {
         let mounted = true;
 
         const tryRefreshToken = async () => {
-            console.log('Starting token refresh...');
             try {
                 const newToken = await refreshToken();
-                console.log('New token from refreshToken():', newToken);
 
                 if (!newToken) {
                     throw new Error('Received empty token from refreshToken');
@@ -53,17 +48,13 @@ export const AuthProvider = ({ children }) => {
                 if (!mounted) return;
 
                 setUser(userInfo);
-                console.log('User set after fetchUserInfo:', userInfo);
+                // eslint-disable-next-line no-unused-vars
             } catch (err) {
                 if (!mounted) return;
-                console.warn('Token refresh failed:', err.message);
-                
+
                 setUser(null);
                 setAccessToken(null);
-            } finally {
-                if (mounted) setLoading(false);
-                console.log('Token refresh process finished');
-            }
+            } finally { /* empty */ }
         };
 
         tryRefreshToken();
@@ -73,8 +64,6 @@ export const AuthProvider = ({ children }) => {
         };
     }, []);
 
-    if (loading) return <div>Loading...</div>;
-
     return (
         <AuthContext.Provider
             value={{
@@ -83,7 +72,6 @@ export const AuthProvider = ({ children }) => {
                 login,
                 logout,
                 isAuthenticated: !!user && !!accessToken,
-                loading,
             }}
         >
             {children}

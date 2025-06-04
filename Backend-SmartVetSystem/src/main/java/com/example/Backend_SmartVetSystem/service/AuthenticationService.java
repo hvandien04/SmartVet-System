@@ -160,20 +160,15 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse refreshAccessToken(String refreshToken) throws ParseException, JOSEException {
-        System.out.println("Verifying refresh token...");
         SignedJWT signedJWT = verifyToken(refreshToken,true);
-        System.out.println("Refresh token verified successfully");
 
         String username = signedJWT.getJWTClaimsSet().getSubject();
-        System.out.println("Username from token: " + username);
 
         var user = userRepository.findByUsername(username)
                 .orElseThrow(() -> {
-                    System.out.println("User not found for username: " + username);
                     return new AppException(ErrorCode.USER_NOT_FOUND);
                 });
 
-        System.out.println("Generating new access token for user: " + user.getUsername());
 
         return AuthenticationResponse.builder()
                 .authenticated(true)

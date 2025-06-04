@@ -46,8 +46,6 @@ public class AuthenticationController {
     ApiResponse<Void> logout(@RequestBody IntrospectRequest request,
                              @CookieValue(name = "refresh_token", required = false) String refreshToken,
                              HttpServletResponse response) throws ParseException, JOSEException {
-        System.out.println("Received logout request with body: " + request);
-        System.out.println("Received refresh token from cookie: " + refreshToken);
 
         // Gọi service logout
         authenticationService.logout(request, refreshToken);
@@ -68,7 +66,6 @@ public class AuthenticationController {
     @PostMapping("/refresh-token")
     public ApiResponse<AuthenticationResponse> refreshToken(
             @CookieValue(name = "refresh_token", required = false) String refreshToken) throws ParseException, JOSEException {
-        System.out.println("Refresh token from cookie: " + refreshToken);
         if (refreshToken == null) {
             throw new AppException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
