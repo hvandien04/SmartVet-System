@@ -10,7 +10,6 @@ import imgSmall1 from '../assets/img-small1.png';
 import imgSmall2 from '../assets/img-small2.png';
 import { login as loginService } from '../services/authService';
 import { useNavigate } from 'react-router-dom';
-import { attachInterceptors } from '../api/axiosConfig';
 
 function Login() {
     const [formData, setFormData] = useState({
@@ -20,7 +19,7 @@ function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
-    const { login: loginContext } = useAuth();
+    const { login } = useAuth();
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -34,10 +33,7 @@ function Login() {
         e.preventDefault();
         try {
             const { token, user } = await loginService(formData.username, formData.password);
-
-            loginContext(user, token);
-            attachInterceptors(token, loginContext); // Đính token vào axios
-
+            login(user, token);
             alert('Login successful!');
             navigate('/');
         } catch (error) {
@@ -108,11 +104,6 @@ function Login() {
 
                         <button type="submit" className="button">Continue</button>
                     </form>
-
-                    <p className="footer normal">Don't have an account?</p>
-                    <p className="footer link" onClick={() => navigate('/register')} style={{ cursor: 'pointer' }}>
-                        Sign up
-                    </p>
                 </div>
             </main>
         </div>
