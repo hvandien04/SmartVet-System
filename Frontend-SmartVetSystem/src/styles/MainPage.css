@@ -1,0 +1,364 @@
+/* Variables */
+:root {
+    --black: #000000;
+    --primary-color: #6a5acd;
+    --primary-hover: #e7e5fc;
+    --light-bg: #f5f5f5;
+    --white: #ffffff;
+    --gray-border: #e0e0e0;
+    --text-light: #666;
+    --shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
+
+/* Reset & font */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+body, #root {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background-color: var(--light-bg);
+}
+
+/* Sidebar */
+.sidebar {
+    position: fixed;      /* Cố định sidebar */
+    top: 0;
+    left: 0;
+    height: 100vh;        /* Chiều cao bằng viewport */
+    width: 250px;
+    background-color: var(--white);
+    padding: 20px;
+    border-right: 1px solid var(--gray-border);
+    overflow-y: auto;     /* Nếu sidebar có nội dung dài, cho phép cuộn trong sidebar */
+    box-sizing: border-box;
+    z-index: 1000;        /* Đảm bảo sidebar nằm trên main */
+}
+
+.sidebar-logo {
+    display: flex;
+    align-items: center;         /* Canh giữa theo chiều dọc */
+    gap: 10px;                   /* Khoảng cách giữa logo và chữ */
+    margin-bottom: 20px;
+}
+
+.logo-image {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+.logo-text {
+    font-size: 22px;
+    font-weight: bold;
+    color: var(--black);
+}
+
+
+.sidebar h2 {
+    font-size: 22px;
+    color: var(--black);
+    margin-bottom: 20px;
+}
+.sidebar ul {
+    list-style: none;
+}
+.sidebar ul li {
+    padding: 12px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: var(--transition);
+}
+.sidebar ul li:hover,
+.sidebar ul li.active {
+    background-color: var(--primary-hover);
+    color: var(--primary-color);
+    font-weight: bold;
+}
+.sidebar-user-info {
+    position: fixed;
+    bottom: 0;
+    left : 0;
+    background-color: var(--white);
+    padding: 15px 10px;
+    border-top: 1px solid var(--gray-border);
+
+    /* Flex chỉnh ngang */
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Đẩy nút cài đặt sang phải */
+    gap: 12px;
+}
+
+.sidebar-separator {
+    border: none;
+    border-top: 1px solid var(--gray-border);
+    margin: 16px 0;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--primary-color);
+    flex-shrink: 0;
+}
+
+/* Bao tên và View Profile nằm cạnh nhau */
+.user-info-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-grow: 1;
+    margin-left: 10px; /* Cách avatar */
+}
+
+.user-name {
+    font-weight: bold;
+    margin-bottom: 4px;
+    color: var(--black);
+    font-size: 1rem;
+}
+
+/* View Profile là chữ, có thể hover */
+.view-profile {
+    font-size: 0.9rem;
+    color: var(--black);
+    cursor: pointer;
+    user-select: none;
+}
+
+/* Nút cài đặt là icon nhỏ, không full width */
+.btn-settings {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--black);
+    font-size: 1.3rem;
+    padding: 4px;
+    transition: var(--transition);
+    flex-shrink: 0;
+}
+
+.btn-settings:hover {
+    color: var(--text-light);
+}
+
+/* Bỏ các style cũ btn-view-profile và btn-settings full width */
+.btn-view-profile,
+.btn-settings {
+    width: auto;
+    padding: 0;
+    margin: 0;
+    border-radius: 0;
+    font-weight: normal;
+}
+
+/* Main Content */
+.main {
+    margin-left: 100px;   /* Đẩy main sang phải tránh chồng lên sidebar */
+    width: 100%;
+    max-width: 100%; /* không nên giới hạn */
+    padding: 0 20px; /* tránh sát viền */
+    box-sizing: border-box;
+}
+
+/* Top Bar */
+.top-bar {
+    position: fixed;     /* cố định luôn trên cùng */
+    top: 0;
+    left: 250px;        /* tránh trùng với sidebar rộng 250px */
+    right: 0;
+    z-index: 1001;      /* cao hơn sidebar (1000) */
+    background-color: var(--primary-color);
+    border-bottom: 1px solid #ccc;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* Các phần con */
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* khoảng cách input và nút */
+    position: relative;
+}
+
+.search-box input {
+    min-width: 500px;
+    padding: 8px 12px 8px 36px; /* padding-left lớn để chừa chỗ icon */
+    border: 1px solid #ccc;
+    border-radius: 6px 0 0 6px;
+    outline: none;
+    flex-grow: 1;
+    font-size: 14px;
+}
+
+/* Thêm icon tìm kiếm bên trong input */
+.search-box input::before,
+.search-box input::-webkit-input-placeholder {
+}
+
+/* Cách chính xác: tạo phần tử icon riêng */
+.search-box .search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    font-size: 16px;
+    pointer-events: none; /* không làm ảnh hưởng input */
+}
+
+.search-box button {
+    padding: 8px 14px;
+    background-color: var(--white);
+    border: none;
+    color: var(--primary-color);
+    border-radius: 0 6px 6px 0;
+    cursor: pointer;
+    transition: var(--transition);
+}
+.search-box button:hover {
+    opacity: 0.9;
+}
+
+.icons {
+    display: flex;
+    gap: 20px;
+    font-size: 18px;
+    color: var(--white);
+}
+
+/* Page Title + Create Button */
+.page-header {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.page-header h1 {
+    font-size: 22px;
+    font-weight: bold;
+}
+.page-header button {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: var(--transition);
+}
+.page-header button:hover {
+    opacity: 0.9;
+}
+.page-header button:active {
+    transform: scale(0.98);
+}
+
+/* Table Styles */
+.table-container {
+    margin-top: 20px;
+    width: calc(100vw - 300px);
+    box-sizing: border-box;
+    background: white;
+    border-radius: 10px;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border: 1px solid var(--text-light); /* Viền bao ngoài bảng */
+}
+thead {
+    background-color: var(--primary-color);
+    color: white;
+}
+thead th {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid var(--text-light); /* Viền cho từng ô đầu */
+}
+tbody td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid var(--text-light); /* Viền cho từng ô nội dung */
+
+}
+tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* Icons Edit/Delete */
+.action-icons {
+    text-align: center;
+    gap: 10px;
+}
+.action-icons i {
+    cursor: pointer;
+    color: var(--text-light);
+    transition: var(--transition);
+}
+.action-icons i:hover {
+    color: var(--primary-color);
+}
+
+/* Pagination */
+.pagination {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+.pagination button {
+    padding: 6px 12px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+.pagination button.active {
+    background: var(--primary-color);
+    color: white;
+    font-weight: bold;
+}
+
+/* Focus states for accessibility */
+button:focus,
+input:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sidebar {
+        display: none;
+    }
+    .main {
+        padding: 15px;
+    }
+    .top-bar,
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}
