@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import Table from '../components/Table';
 import Pagination from '../components/Pagination';
 import EditModal from '../components/EditModal';
-import '../styles/MainPage.css';
+import '../styles/dashboard.css';
+import { fetchAllDoctors } from '../services/doctormanagementService';
 
 const DoctorManagement = () => {
     const sidebarGroups = [
@@ -51,14 +52,15 @@ const DoctorManagement = () => {
     const [activePage, setActivePage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
     const [editingDoctor, setEditingDoctor] = useState(null);
-    const [doctorsData, setDoctorsData] = useState([
-        { id: 26, fullName: 'Ryan Young', email: 'ryoung@yahoo.com', gender: 'Male', phone: '(719) 810-1058' },
-        { id: 27, fullName: 'Anna Smith', email: 'asmith@gmail.com', gender: 'Female', phone: '(123) 456-7890' },
-        { id: 28, fullName: 'John Doe', email: 'jdoe@hotmail.com', gender: 'Male', phone: '(555) 123-4567' },
-        { id: 29, fullName: 'Mary Johnson', email: 'maryj@example.com', gender: 'Female', phone: '(987) 654-3210' },
-        { id: 30, fullName: 'David Lee', email: 'dlee@mail.com', gender: 'Male', phone: '(222) 333-4444' },
-        { id: 31, fullName: 'Emily Davis', email: 'emilyd@domain.com', gender: 'Female', phone: '(111) 222-3333' },
-    ]);
+    const [doctorsData, setDoctorsData] = useState([]);
+
+    useEffect(() => {
+        if (activeSidebarItem === 'Quản lý bác sĩ') {
+            fetchAllDoctors()
+                .then(data => setDoctorsData(data))
+                .catch(error => console.error('Không thể tải danh sách bác sĩ:', error));
+        }
+    }, [activeSidebarItem]);
     const filteredDoctors = doctorsData.filter(doc =>
         doc.fullName.toLowerCase().includes(searchTerm.toLowerCase())
     );

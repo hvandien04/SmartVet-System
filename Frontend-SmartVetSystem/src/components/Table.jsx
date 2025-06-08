@@ -9,7 +9,7 @@ const Table = ({ data, onEdit, onDelete }) => (
                 <th>DoctorID</th>
                 <th>Full name</th>
                 <th>Email</th>
-                <th>Gender</th>
+                <th>Address</th>
                 <th>Phone</th>
                 <th>Edit</th>
                 <th>Delete</th>
@@ -17,12 +17,12 @@ const Table = ({ data, onEdit, onDelete }) => (
             </thead>
             <tbody>
             {data.map((doc, index) => (
-                <tr key={doc.id}>
+                <tr key={doc.userId}>
                     <td>{index + 1}</td>
-                    <td>{doc.id}</td>
+                    <td>{doc.userId}</td>
                     <td>{doc.fullName}</td>
                     <td>{doc.email}</td>
-                    <td>{doc.gender}</td>
+                    <td>{doc.address}</td>
                     <td>{doc.phone}</td>
                     <td className="action-icons">
                         <i className="fa fa-pencil" onClick={() => onEdit(doc)} />
