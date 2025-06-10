@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { refreshToken } from '../services/authService';
 import { logout as logoutService } from '../services/authService'; // import logout
-import { fetchUserInfo } from '../services/authService';
+import { fetchUserInfo } from '../services/userService';
 import { attachInterceptors } from '../api/axiosConfig';
 
 const AuthContext = createContext();

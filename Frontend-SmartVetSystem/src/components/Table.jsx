@@ -11,6 +11,7 @@ const Table = ({ data, onEdit, onDelete }) => (
                 <th>Email</th>
                 <th>Address</th>
                 <th>Phone</th>
+                <th>Role</th>
                 <th>Edit</th>
                 <th>Delete</th>
             </tr>
@@ -24,6 +25,7 @@ const Table = ({ data, onEdit, onDelete }) => (
                     <td>{doc.email}</td>
                     <td>{doc.address}</td>
                     <td>{doc.phone}</td>
+                    <td>{doc.role}</td>
                     <td className="action-icons">
                         <i className="fa fa-pencil" onClick={() => onEdit(doc)} />
                     </td>

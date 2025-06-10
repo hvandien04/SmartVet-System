@@ -2,57 +2,54 @@ import React, { useEffect, useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import Table from '../components/Table';
 import Pagination from '../components/Pagination';
-import EditModal from '../components/EditModal';
 import '../styles/dashboard.css';
-import { fetchAllDoctors } from '../services/doctormanagementService';
+import { fetchAllDoctors } from '../services/adminService.js';
+import CreateDoctorModal from '../components/CreateDoctorModal';
+import { createDoctor } from '../services/adminService.js';
+import EditDoctorModal from '../components/EditDoctorModal';
+import { updateDoctor } from '../services/adminService.js';
+import { getSidebarGroups } from '../components/sidebarData'; //
+import {fetchUserInfo} from '../services/userService';
 
 const DoctorManagement = () => {
-    const sidebarGroups = [
-        {
-            title: 'Quản trị hệ thống',
-            items: [
-                'Thống kê',
-                'Quản lý bác sĩ',
-                'Quản lý thú cưng',
-                'Quản lý khách hàng',
-            ],
-        },
-        {
-            title: 'Dự đoán bệnh',
-            items: [
-                'Dự đoán bệnh',
-                'Lịch sử dự đoán',
-            ],
-        },
-        {
-            title: 'Hồ sơ bệnh án',
-            items: [
-                'Danh sách bệnh án',
-                'Xuất bệnh án',
-            ],
-        },
-        {
-            title: 'Lịch khám bệnh',
-            items: [
-                'Lịch làm việc',
-                'Đặt lịch hẹn',
-                'Thông báo khách hàng',
-            ],
-        },
-        {
-            title: 'User Info',
-            isUserInfo: true,
-            user: {
-                avatarUrl: 'https://i.pravatar.cc/40',
-                name: 'Nguyễn Văn A',
-            },
-        },
-    ];
+
+    const [sidebarGroups, setSidebarGroups] = useState([]);
     const [activeSidebarItem, setActiveSidebarItem] = useState('Quản lý bác sĩ');
     const [activePage, setActivePage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
     const [editingDoctor, setEditingDoctor] = useState(null);
     const [doctorsData, setDoctorsData] = useState([]);
+    const [showCreateModal, setShowCreateModal] = useState(false);
+
+    const loadDoctors = async () => {
+        try {
+            const data = await fetchAllDoctors();
+            setDoctorsData(data);
+        } catch (error) {
+            console.error('Không thể tải danh sách bác sĩ:', error);
+        }
+    };
+
+    useEffect(() => {
+        const loadUser = async () => {
+            try {
+                const user = await fetchUserInfo();
+                const groups = getSidebarGroups(user);
+                setSidebarGroups(groups);
+            } catch (error) {
+                console.error('Lỗi khi tải user:', error);
+            }
+        };
+
+        loadUser();
+    }, []);
+
+
+    useEffect(() => {
+        if (activeSidebarItem === 'Quản lý bác sĩ') {
+            loadDoctors();
+        }
+    }, [activeSidebarItem]);
 
     useEffect(() => {
         if (activeSidebarItem === 'Quản lý bác sĩ') {
@@ -65,9 +62,32 @@ const DoctorManagement = () => {
         doc.fullName.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const itemsPerPage = 3;
+    const itemsPerPage = 10;
     const totalPages = Math.ceil(filteredDoctors.length / itemsPerPage);
     const currentDoctors = filteredDoctors.slice((activePage - 1) * itemsPerPage, activePage * itemsPerPage);
+    const handleCreateDoctor = async (doctorData) => {
+        try {
+            await createDoctor(doctorData);
+            await loadDoctors(); // tải lại danh sách
+            setShowCreateModal(false);
+        } catch (error) {
+            console.error('Tạo bác sĩ thất bại:', error);
+            alert('Không thể tạo bác sĩ.');
+        }
+    };
+
+
+    const handleUpdateDoctor = async (userId, updateData) => {
+        try {
+            await updateDoctor(userId, updateData);
+            await loadDoctors(); // 🔁 tải lại danh sách
+            setEditingDoctor(null); // đóng modal nếu cần
+        } catch (error) {
+            console.error('Cập nhật thất bại:', error);
+            alert('Không thể cập nhật bác sĩ.');
+        }
+    };
+
 
     return (
         <div style={{ display: 'flex', height: '100vh' }}>
@@ -79,6 +99,13 @@ const DoctorManagement = () => {
                     setActivePage(1);
                 }}
             />
+            {showCreateModal && (
+                <CreateDoctorModal
+                    onClose={() => setShowCreateModal(false)}
+                    onCreate={handleCreateDoctor}
+                />
+            )}
+
             <div className="main">
                 <div className="top-bar">
                     <div className="search-box">
@@ -102,7 +129,7 @@ const DoctorManagement = () => {
 
                 <div className="page-header">
                     <h1>{activeSidebarItem}</h1>
-                    <button>Create</button>
+                    <button onClick={() => setShowCreateModal(true)}>Create</button>
                 </div>
 
                 {activeSidebarItem === 'Quản lý bác sĩ' && (
@@ -124,21 +151,13 @@ const DoctorManagement = () => {
                 )}
 
                 {editingDoctor && (
-                    <EditModal
+                    <EditDoctorModal
                         doctor={editingDoctor}
-                        onChange={e => {
-                            const { name, value } = e.target;
-                            setEditingDoctor(prev => ({ ...prev, [name]: value }));
-                        }}
-                        onSave={() => {
-                            setDoctorsData(prev =>
-                                prev.map(doc => (doc.id === editingDoctor.id ? editingDoctor : doc))
-                            );
-                            setEditingDoctor(null);
-                        }}
-                        onCancel={() => setEditingDoctor(null)}
+                        onClose={() => setEditingDoctor(null)}
+                        onUpdate={handleUpdateDoctor}
                     />
                 )}
+
             </div>
         </div>
     );

@@ -10,7 +10,7 @@ export const fetchAllDoctors = async () => {
         throw error;
     }
 };
-/*
+
 // Tạo mới bác sĩ
 export const createDoctor = async (doctorData) => {
     try {
@@ -32,7 +32,7 @@ export const updateDoctor = async (userId, updateData) => {
         throw error;
     }
 };
-*/
+
 // Xóa bác sĩ (nếu có API)
 /*export const deleteDoctor = async (userId) => {
     try {

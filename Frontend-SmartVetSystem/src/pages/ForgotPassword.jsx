@@ -8,7 +8,7 @@ import imgSmall1 from '../assets/img-small1.png';
 import imgSmall2 from '../assets/img-small2.png';
 import OtpVerification from './OtpVerification'; // Import component OTP
 
-import { sendOtpToEmail, verifyOtpCode } from '../services/authService';
+import { sendOtpToEmail, verifyOtpCode } from '../services/userService';
 
 function ForgotPassword() {
     const [email, setEmail] = useState('');

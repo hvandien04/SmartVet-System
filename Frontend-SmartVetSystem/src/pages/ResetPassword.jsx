@@ -7,7 +7,7 @@ import imgMain from '../assets/img-main.png';
 import imgSmall1 from '../assets/img-small1.png';
 import imgSmall2 from '../assets/img-small2.png';
 import '../styles/Login.css';
-import { resetPassword } from '../services/authService';
+import { resetPassword } from '../services/userService';
 
 function ResetPassword() {
     const [password, setPassword] = useState('');
