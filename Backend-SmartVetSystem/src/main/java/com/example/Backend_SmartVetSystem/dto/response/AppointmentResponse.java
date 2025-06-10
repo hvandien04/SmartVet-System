@@ -15,8 +15,8 @@ import java.time.Instant;
 public class AppointmentResponse {
     private String appointmentId;
     private String petId;
-    private Owner owner;
-    private User user;
+    private OwnerResponse owner;
+    private UserResponse user;
     private Instant appointmentTime;
     private String reason;
     private String content;

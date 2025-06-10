@@ -11,7 +11,7 @@ import org.mapstruct.MappingTarget;
 public interface DiagnosisHistoryMapper {
     DiagnosisHistory toDiagnosisHistory(DiagnosisHistoryRequest request);
 
-    @Mapping(source = "pet.petId", target = "petId")
+//    @Mapping(source = "pet.petId", target = "petId")
     @Mapping(source = "record", target = "medicalRecord")
     DiagnosisHistoryResponse toDiagnosisHistoryResponse(DiagnosisHistory history);
     void updateDiagnosisHistory(@MappingTarget DiagnosisHistory history, DiagnosisHistoryRequest request);

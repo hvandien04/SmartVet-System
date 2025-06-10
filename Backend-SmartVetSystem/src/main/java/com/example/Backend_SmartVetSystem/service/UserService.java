@@ -35,11 +35,13 @@ public class UserService {
     private final EmailService emailService;
     private final ConcurrentHashMap<String, AbstractMap.SimpleEntry<String, LocalDateTime>> verificationCodes = new ConcurrentHashMap<>();
 
+
     @PreAuthorize("hasRole('ADMIN')")
     public UserResponse createUser(UserCreateRequest request) {
         User user = userMapper.toUser(request);
         user.setUserId(idGeneratorService.generateRandomId("U",userRepository::existsById));
-        user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
+        String defaultPassword = "12345678@aA";
+        user.setPasswordHash(passwordEncoder.encode(defaultPassword));
         try {
             user = userRepository.save(user);
         } catch (Exception e) {

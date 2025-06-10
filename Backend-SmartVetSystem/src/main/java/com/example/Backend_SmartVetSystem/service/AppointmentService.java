@@ -16,6 +16,8 @@ import com.example.Backend_SmartVetSystem.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,12 +31,25 @@ public class AppointmentService {
     private final OwnerRepository ownerRepository;
     private final UserRepository userRepository;
 
+    private boolean findConflictAppointment(String userId, Instant newTime) {
+        List<Appointment> conflicts = appointmentRepository.findConflictAppointment(userId, newTime.minus(1, ChronoUnit.HOURS), newTime.plus(1, ChronoUnit.MINUTES) );
+        return !conflicts.isEmpty();
+    }
+
+    private boolean findUpdateAppointment(String userId, Instant newTime, String appointmentId) {
+        List<Appointment> conflicts = appointmentRepository.findUpdateAppointments(userId, newTime.minus(1, ChronoUnit.HOURS), newTime.plus(1, ChronoUnit.MINUTES), appointmentId);
+        return !conflicts.isEmpty();
+    }
+
     public AppointmentResponse createAppointment(AppointmentRequest appointmentRequest) {
         Appointment appointment = appointmentMapper.toAppointment(appointmentRequest);
         appointment.setAppointmentId(idGeneratorService.generateRandomId("A",appointmentRepository::existsById));
         petRepository.findById(appointmentRequest.getPetId()).orElseThrow(()-> new AppException(ErrorCode.PET_NOT_FOUND));
         Owner owner = ownerRepository.findById(appointmentRequest.getOwnerId()).orElseThrow(()-> new AppException(ErrorCode.OWNER_NOT_FOUND));
         User  user = userRepository.findById(appointmentRequest.getUserId()).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_FOUND));
+        if(findConflictAppointment(user.getUserId(),appointmentRequest.getAppointmentTime())){
+            throw new AppException(ErrorCode.HAS_ANOTHER_APPOINTMENTS);
+        }
         appointment.setOwner(owner);
         appointment.setUser(user);
         return appointmentMapper.toAppointmentResponse(appointmentRepository.save(appointment));
@@ -48,8 +63,17 @@ public class AppointmentService {
         return appointmentRepository.findAll().stream().map(appointmentMapper::toAppointmentResponse).collect(Collectors.toList());
     }
 
+    public List<AppointmentResponse> getAppointmentsByInstant(Instant startDate, Instant endDate) {
+        return appointmentRepository.appointmentByTime(startDate, endDate).stream().map(appointmentMapper::toAppointmentResponse).collect(Collectors.toList());
+    }
+
     public AppointmentResponse updateAppointment(String appointmentId, AppointmentRequest appointmentRequest) {
         Appointment appointment = appointmentRepository.findById(appointmentId).orElseThrow(() -> new AppException(ErrorCode.APPLICATION_NOT_FOUND));
+        if(appointmentRequest.getAppointmentTime() != null) {
+            if(findUpdateAppointment(appointment.getUser().getUserId(),appointmentRequest.getAppointmentTime(),appointmentId)){
+                throw new AppException(ErrorCode.HAS_ANOTHER_APPOINTMENTS);
+            }
+        }
         appointmentMapper.UpdateAppointment(appointment, appointmentRequest);
         petRepository.findById(appointmentRequest.getPetId()).orElseThrow(()-> new AppException(ErrorCode.PET_NOT_FOUND));
         Owner owner = ownerRepository.findById(appointmentRequest.getOwnerId()).orElseThrow(()-> new AppException(ErrorCode.OWNER_NOT_FOUND));

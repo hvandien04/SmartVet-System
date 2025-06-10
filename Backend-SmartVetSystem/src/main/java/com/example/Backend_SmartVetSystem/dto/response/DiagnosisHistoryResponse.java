@@ -13,8 +13,6 @@ import java.time.Instant;
 @Builder
 public class DiagnosisHistoryResponse {
     private String diagnosisId;
-    private UserResponse user;
-    private String petId;
     private MedicalRecordResponse medicalRecord;
     private Instant createdAt;
 }

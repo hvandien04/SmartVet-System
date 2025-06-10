@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/DiagnosisHistory")
+@RequestMapping("/diagnosis-history")
 @RequiredArgsConstructor
 public class DiagnosisHistoryController {
     private final DiagnosisHistoryService diagnosisHistoryService;

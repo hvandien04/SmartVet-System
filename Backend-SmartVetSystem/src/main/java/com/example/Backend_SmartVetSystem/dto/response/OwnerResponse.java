@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class OwnerResponse {
+    private String ownerId;
     private String name;
     private String email;
     private String phone;
