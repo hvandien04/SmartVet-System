@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../components/Sidebar';
-import Table from '../components/Table';
+import Table from '../components/DoctorTable.jsx';
 import Pagination from '../components/Pagination';
 import '../styles/dashboard.css';
 import { fetchAllDoctors } from '../services/adminService.js';
@@ -8,8 +8,8 @@ import CreateDoctorModal from '../components/CreateDoctorModal';
 import { createDoctor } from '../services/adminService.js';
 import EditDoctorModal from '../components/EditDoctorModal';
 import { updateDoctor } from '../services/adminService.js';
-import { getSidebarGroups } from '../components/sidebarData'; //
-import {fetchUserInfo} from '../services/userService';
+import { getSidebarGroups } from '../components/sidebarData';
+import { useAuth } from '../context/AuthContext';
 
 const DoctorManagement = () => {
 
@@ -30,20 +30,12 @@ const DoctorManagement = () => {
         }
     };
 
+    const { user } = useAuth();
+
     useEffect(() => {
-        const loadUser = async () => {
-            try {
-                const user = await fetchUserInfo();
-                const groups = getSidebarGroups(user);
-                setSidebarGroups(groups);
-            } catch (error) {
-                console.error('Lỗi khi tải user:', error);
-            }
-        };
-
-        loadUser();
-    }, []);
-
+        const groups = getSidebarGroups(user || null);
+        setSidebarGroups(groups);
+    }, [user]);
 
     useEffect(() => {
         if (activeSidebarItem === 'Quản lý bác sĩ') {

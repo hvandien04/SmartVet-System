@@ -398,7 +398,7 @@ input:focus {
         opacity: 1;
     }
 }
-
+/*Table management*/
 .modal h2 {
     color: #6c5ce7;
     font-size: 20px;
@@ -466,4 +466,163 @@ input:focus {
 
 .modal button:hover:last-child {
     background-color: #5a4cd1;
+}
+/*Owner profile*/
+.owner-profile {
+    font-family: 'Arial', sans-serif;
+    padding: 30px;
+    color: #333;
+}
+
+.owner-profile h2 {
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.profile-section {
+    display: flex;
+    align-items: flex-start;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.avatar img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+}
+
+.profile-card {
+    background-color: #d3e8f8;
+    padding: 20px 30px;
+    border-radius: 10px;
+    flex: 1; /* Mở rộng hết không gian còn lại */
+    position: relative;
+    text-align: left; /* Căn trái toàn bộ nội dung */
+}
+
+.profile-card h3 {
+    margin-top: 0;
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.profile-card p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.edit-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #6c63ff;
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.edit-button:hover {
+    background-color: #5751d3;
+}
+
+.pet-section {
+    margin-top: 20px;
+    position: relative;
+}
+
+.add-button {
+    float: right;
+    margin-bottom: 10px;
+    background-color: #6c63ff;
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.add-button:hover {
+    background-color: #5751d3;
+}
+
+.pet-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.pet-table th,
+.pet-table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: left;
+    font-size: 14px;
+}
+.back-button {
+    background-color: #ccc;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.back-button:hover {
+    background-color: #aaa;
+}
+.user-settings {
+    position: relative;
+    display: inline-block;
+}
+/*setting menu slide bar*/
+.settings-menu {
+    position: absolute;
+    bottom: 40px;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 0.5rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    z-index: 10;
+    min-width: 150px;
+}
+
+.settings-menu button {
+    background: none;
+    border: none;
+    color: #333;
+    padding: 0.5rem;
+    width: 100%;
+    text-align: left;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.settings-menu button:hover {
+    background-color: #f0f0f0;
+}
+/*nút quay lại trang đăng nhập*/
+.back-to-login-btn {
+    padding: 10px 20px;
+    background-color: #007bff; /* Màu xanh */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 1rem;
+}
+
+.back-to-login-btn:hover {
+    background-color: #0056b3;
 }

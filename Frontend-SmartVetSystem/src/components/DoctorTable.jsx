@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Table = ({ data, onEdit, onDelete }) => (
+const DoctorTable = ({ data, onEdit, onDelete }) => (
     <div className="table-container">
         <table>
             <thead>
@@ -39,4 +39,4 @@ const Table = ({ data, onEdit, onDelete }) => (
     </div>
 );
 
-export default Table;
+export default DoctorTable;
