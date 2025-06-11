@@ -12,7 +12,7 @@ const SearchBox = ({ searchTerm, setSearchTerm, setActivePage }) => {
                     value={searchTerm}
                     onChange={e => {
                         setSearchTerm(e.target.value);
-                        if (setActivePage) setActivePage(1); // Gọi nếu có truyền prop
+                        if (setActivePage) setActivePage(1);
                     }}
                 />
                 <button>Search</button>

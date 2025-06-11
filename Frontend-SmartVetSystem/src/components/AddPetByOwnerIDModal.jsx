@@ -19,7 +19,7 @@ const AddPetByOwnerIDModal = ({ ownerId, onClose, onCreate }) => {
 
     const handleSubmit = () => {
         if (!ownerId) return;
-        onCreate({ ...petData, ownerId }); // gửi thêm ownerId
+        onCreate({ ...petData, ownerId });
         onClose();
     };
 

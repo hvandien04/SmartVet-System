@@ -6,13 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="7f26f030-429d-4829-acb5-d77069e980aa" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/components/EditModal.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/components/Sidebar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/components/Sidebar.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/components/Table.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/components/DoctorTable.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/pages/DoctorManagement.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/pages/DoctorManagement.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/components/AddPetByOwnerIDModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/components/AddPetByOwnerIDModal.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/components/OwnerProfile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/components/OwnerProfile.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/components/SearchBox.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/components/SearchBox.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/pages/Home.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/pages/Home.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/styles/dashboard.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/styles/dashboard.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,7 +121,7 @@
       <workItem from="1749469917609" duration="9778000" />
       <workItem from="1749524021251" duration="4268000" />
       <workItem from="1749538305802" duration="2055000" />
-      <workItem from="1749628513238" duration="17816000" />
+      <workItem from="1749628513238" duration="18791000" />
     </task>
     <servers />
   </component>

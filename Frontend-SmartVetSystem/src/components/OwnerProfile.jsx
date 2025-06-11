@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import '../styles/dashboard.css';
 import EditOwnerModal from '../components/EditOwnerModal';
 import { updateOwner } from '../services/ownerService';
-import { fetchPetsByOwner } from '../services/petService'; // Thêm dòng này
+import { fetchPetsByOwner } from '../services/petService';
 import AddPetModal from '../components/AddPetByOwnerIDModal';
 import { createPet } from '../services/petService';
 

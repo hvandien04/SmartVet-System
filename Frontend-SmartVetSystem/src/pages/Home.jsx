@@ -13,11 +13,21 @@ const Home = () => {
 
     const [sidebarGroups, setSidebarGroups] = useState([]);
     const [activeSidebarItem, setActiveSidebarItem] = useState('');
+    const [showGuestMessage, setShowGuestMessage] = useState(false); // ✅ Thêm state này
 
     useEffect(() => {
-        // Dù có user hay không, vẫn lấy sidebar phù hợp (nếu có cần phân quyền)
         const groups = getSidebarGroups(user || {});
         setSidebarGroups(groups);
+    }, [user]);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (!user) {
+                setShowGuestMessage(true);
+            }
+        }, 300);
+
+        return () => clearTimeout(timer); // Xoá nếu component unmount
     }, [user]);
 
     const handleGoToLogin = () => {
@@ -36,19 +46,15 @@ const Home = () => {
 
             <SearchBox
                 searchTerm={searchTerm}
-                setSearchTerm={(value) => {
-                    setSearchTerm(value);
-                }}
+                setSearchTerm={value => setSearchTerm(value)}
             />
-
 
             <div className="main">
                 <div className="page-header">
                     <h1>{activeSidebarItem}</h1>
                 </div>
 
-                {/* Nếu chưa đăng nhập, hiển thị nút quay về đăng nhập */}
-                {!user && (
+                {showGuestMessage && !user && (
                     <div style={{ padding: '1rem' }}>
                         <p>Bạn chưa đăng nhập.</p>
                         <button className="back-to-login-btn" onClick={handleGoToLogin}>
@@ -56,7 +62,6 @@ const Home = () => {
                         </button>
                     </div>
                 )}
-
             </div>
         </div>
     );
