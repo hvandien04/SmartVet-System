@@ -36,6 +36,13 @@ public class PetController {
                 .build();
     }
 
+    @GetMapping("/owner/{ownerId}")
+    ApiResponse<List<PetResponse>> GetPetsByOwner(@PathVariable String ownerId) {
+        return ApiResponse.<List<PetResponse>>builder()
+                .result(petService.getPetsByOwner(ownerId))
+                .build();
+    }
+
     @PutMapping("/{PetId}")
     ApiResponse<PetResponse> UpdatePet(@PathVariable String PetId, @RequestBody PetUpdateRequest request) {
         return ApiResponse.<PetResponse>builder()

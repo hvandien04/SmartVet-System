@@ -13,7 +13,6 @@ import java.time.Instant;
 @Builder
 public class DiseasePredictionRequest {
     private String UserId;
-    private Instant createdAt;
     private String animalType;
     private String breed;
     private String gender;

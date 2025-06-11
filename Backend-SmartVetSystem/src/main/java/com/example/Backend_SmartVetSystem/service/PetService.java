@@ -67,4 +67,9 @@ public class PetService {
         petRepository.deleteById(petId);
         return "Pet has Id " + petId + " deleted";
     }
+
+    public List<PetResponse> getPetsByOwner(String ownerId) {
+        Owner owner = ownerRepository.findById(ownerId).orElseThrow(()->new AppException(ErrorCode.OWNER_NOT_FOUND));
+        return petRepository.findAllByOwner(owner).stream().map(petMapper::toPetResponse).collect(Collectors.toList());
+    }
 }

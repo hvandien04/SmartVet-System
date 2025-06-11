@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,7 +42,7 @@ public class DiagnosisHistoryService {
         diagnosisHistory.setUser(user);
         MedicalRecord medicalRecord = medicalRecordRepository.findById(request.getRecordId()).orElseThrow(()-> new AppException(ErrorCode.MEDICAL_RECORD_NOT_FOUND));
         diagnosisHistory.setRecord(medicalRecord);
-        diagnosisHistory.setCreatedAt(Instant.now());
+        diagnosisHistory.setCreatedAt(Instant.now().plus(7, ChronoUnit.HOURS));
         return diagnosisHistoryMapper.toDiagnosisHistoryResponse(diagnosisHistoryRepository.save(diagnosisHistory));
     }
 

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -53,7 +54,7 @@ public class MedicalRecordController {
 
     @GetMapping("/date/{date}")
     ApiResponse<List<MedicalRecordResponse>> getMedicalRecordByDate(@PathVariable String date) {
-        Instant visitDate = Instant.parse(date);
+        LocalDate visitDate = LocalDate.parse(date);
         return ApiResponse.<List<MedicalRecordResponse>>builder()
                 .result(medicalRecordService.getMedicalRecordByVisitDate(visitDate))
                 .build();
