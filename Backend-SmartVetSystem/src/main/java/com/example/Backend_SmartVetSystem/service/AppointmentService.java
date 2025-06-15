@@ -30,6 +30,7 @@ public class AppointmentService {
     private final PetRepository petRepository;
     private final OwnerRepository ownerRepository;
     private final UserRepository userRepository;
+    private final AppointmentScheduler appointmentScheduler;
 
     private boolean findConflictAppointment(String userId, Instant newTime) {
         List<Appointment> conflicts = appointmentRepository.findConflictAppointment(userId, newTime.minus(1, ChronoUnit.HOURS), newTime.plus(1, ChronoUnit.MINUTES) );
@@ -52,6 +53,7 @@ public class AppointmentService {
         }
         appointment.setOwner(owner);
         appointment.setUser(user);
+        appointmentScheduler.createSchedule( appointment);
         return appointmentMapper.toAppointmentResponse(appointmentRepository.save(appointment));
     }
 
@@ -80,6 +82,10 @@ public class AppointmentService {
         User  user = userRepository.findById(appointmentRequest.getUserId()).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_FOUND));
         appointment.setOwner(owner);
         appointment.setUser(user);
+        if (appointmentRequest.getAppointmentTime() != null &&
+                !appointmentRequest.getAppointmentTime().equals(appointment.getAppointmentTime())) {
+            appointmentScheduler.UpdateSchedule(appointment);
+        }
         return appointmentMapper.toAppointmentResponse(appointmentRepository.save(appointment));
     }
 

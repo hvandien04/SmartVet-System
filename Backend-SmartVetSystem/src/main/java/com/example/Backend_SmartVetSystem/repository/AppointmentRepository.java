@@ -39,4 +39,5 @@ public interface AppointmentRepository extends JpaRepository<Appointment, String
             @Param("endDate") Instant endDate
     );
 
+    List<Appointment> findByStatus(String pending);
 }
