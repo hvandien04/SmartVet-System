@@ -5,6 +5,8 @@ import DoctorManagement from './pages/DoctorManagement';
 import OwnerManagement from './pages/OwnerManagement';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import PetManagement from './pages/PetManagement';
+import PetDetailManagement from './pages/PetDetailManagement.jsx';
 import './App.css';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
@@ -33,6 +35,22 @@ function App() {
                         element={
                             <ProtectedRoute>
                                 <OwnerManagement />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/petmanagement"
+                        element={
+                            <ProtectedRoute>
+                                <PetManagement />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/petdetail/:petId"
+                        element={
+                            <ProtectedRoute>
+                                <PetDetailManagement />
                             </ProtectedRoute>
                         }
                     />
