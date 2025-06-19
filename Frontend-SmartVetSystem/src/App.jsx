@@ -7,6 +7,10 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import PetManagement from './pages/PetManagement';
 import PetDetailManagement from './pages/PetDetailManagement.jsx';
+import HistoryManagement from './pages/HistoryManagement.jsx';
+import MedicalManagement from './pages/MedicalManagement.jsx';
+import ExtractMedicalFileManagement from './pages/ExtractMedicalFileManagement.jsx';
+import AppointmentManagement from './pages/AppointmentManagement.jsx';
 import './App.css';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
@@ -51,6 +55,38 @@ function App() {
                         element={
                             <ProtectedRoute>
                                 <PetDetailManagement />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/predictionhistory"
+                        element={
+                            <ProtectedRoute>
+                                <HistoryManagement />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/medicalrecords"
+                        element={
+                            <ProtectedRoute>
+                                <MedicalManagement />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/exportrecords"
+                        element={
+                            <ProtectedRoute>
+                                <ExtractMedicalFileManagement />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/appointment"
+                        element={
+                            <ProtectedRoute>
+                                <AppointmentManagement />
                             </ProtectedRoute>
                         }
                     />

@@ -58,11 +58,13 @@ export async function updatePet(petId, petData) {
 
 // Xóa thú cưng
 export async function deletePet(petId) {
+    console.log('Deleting pet with ID:', petId);
+    if (!petId) throw new Error('Pet ID is invalid or missing');
     try {
         const response = await api.delete(`/pet/${petId}`);
-        return response.data.result; // String message
-        // eslint-disable-next-line no-unused-vars
+        return response.data.result;
     } catch (error) {
+        console.error('Delete error:', error.response?.data || error.message);
         throw new Error('Failed to delete pet');
     }
 }

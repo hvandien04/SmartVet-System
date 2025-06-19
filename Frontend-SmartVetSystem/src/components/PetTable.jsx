@@ -24,7 +24,6 @@ const PetTable = ({ data, onEdit, onDelete }) => {
                         <th>Birth Date</th>
                         <th>Profile</th>
                         <th>Edit</th>
-                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -49,13 +48,6 @@ const PetTable = ({ data, onEdit, onDelete }) => {
                                 <i
                                     className="fa fa-pencil"
                                     onClick={() => onEdit(pet)}
-                                    style={{ cursor: 'pointer' }}
-                                />
-                            </td>
-                            <td className="action-icons">
-                                <i
-                                    className="fa fa-trash"
-                                    onClick={() => onDelete(pet.petId)}
                                     style={{ cursor: 'pointer' }}
                                 />
                             </td>
