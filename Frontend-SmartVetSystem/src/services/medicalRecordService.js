@@ -23,10 +23,23 @@ export async function fetchMedicalRecordById(recordId) {
 // GET: Lấy danh sách recordId theo petId
 export async function fetchMedicalRecordIdsByPetId(petId) {
     try {
-        const response = await api.get(`/pet/${petId}/record-ids`);
-        return response.data.result;
+        if (!petId) {
+            throw new Error('Invalid or missing petId');
+        }
+        const response = await api.get(`/medical-record/pet/${petId}`);
+        const result = response.data.result || [];
+        if (!Array.isArray(result)) {
+            console.warn('Expected an array of medical record IDs, received:', result);
+            return [];
+        }
+        // Ánh xạ để chỉ trả về danh sách recordId (nếu API trả về danh sách object)
+        return result.map(record => record.recordId || record).filter(id => id);
     } catch (error) {
-        throw new Error('Failed to fetch medical record IDs');
+        const errorMessage = error.response
+            ? `Failed to fetch medical record IDs for petId ${petId}, Status: ${error.response.status}, Message: ${error.response.data?.message || 'Unknown error'}`
+            : `Failed to fetch medical record IDs for petId ${petId}, Error: ${error.message}`;
+        console.error(errorMessage);
+        throw new Error(errorMessage);
     }
 }
 

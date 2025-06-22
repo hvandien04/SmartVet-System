@@ -1,8 +1,13 @@
-// MedicalRecordTable.jsx
 import React from 'react';
 import '../styles/dashboard.css';
 
-const MedicalRecordTable = ({ data, onViewDetail, onDelete }) => (
+const MedicalRecordTable = ({
+    data,
+    onViewDetail,
+    onDelete,
+    hideViewColumn = false,
+    hideDeleteColumn = false
+}) => (
     <div className="table-container">
         <table>
             <thead>
@@ -16,8 +21,8 @@ const MedicalRecordTable = ({ data, onViewDetail, onDelete }) => (
                     <th>Diagnose</th>
                     <th>Treatment</th>
                     <th>Status</th>
-                    <th>View</th>
-                    <th>Delete</th>
+                    {!hideViewColumn && <th>View</th>}
+                    {!hideDeleteColumn && <th>Delete</th>}
                 </tr>
             </thead>
             <tbody>
@@ -32,22 +37,26 @@ const MedicalRecordTable = ({ data, onViewDetail, onDelete }) => (
                         <td>{item.diagnose}</td>
                         <td>{item.treatment}</td>
                         <td>{item.status}</td>
-                        <td className="action-icons">
-                            <i
-                                className="fa fa-eye"
-                                title="View Detail"
-                                onClick={() => onViewDetail(item)}
-                                style={{ cursor: 'pointer' }}
-                            />
-                        </td>
-                        <td className="action-icons">
-                            <i
-                                className="fa fa-trash"
-                                title="Delete"
-                                onClick={() => onDelete(item.recordId)}
-                                style={{ cursor: 'pointer' }}
-                            />
-                        </td>
+                        {!hideViewColumn && (
+                            <td className="action-icons">
+                                <i
+                                    className="fa fa-eye"
+                                    title="View Detail"
+                                    onClick={() => onViewDetail?.(item)}
+                                    style={{ cursor: 'pointer' }}
+                                />
+                            </td>
+                        )}
+                        {!hideDeleteColumn && (
+                            <td className="action-icons">
+                                <i
+                                    className="fa fa-trash"
+                                    title="Delete"
+                                    onClick={() => onDelete?.(item.recordId)}
+                                    style={{ cursor: 'pointer' }}
+                                />
+                            </td>
+                        )}
                     </tr>
                 ))}
             </tbody>

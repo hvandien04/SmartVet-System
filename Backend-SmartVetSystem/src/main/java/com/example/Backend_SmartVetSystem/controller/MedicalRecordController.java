@@ -60,4 +60,11 @@ public class MedicalRecordController {
                 .build();
     }
 
+    @GetMapping("/pet/{Id}")
+    ApiResponse<List<MedicalRecordResponse>> getMedicalRecordByPetId(@PathVariable String Id) {
+        return ApiResponse.<List<MedicalRecordResponse>>builder()
+                .result(medicalRecordService.getMedicalRecordByPet(Id))
+                .build();
+    }
+
 }

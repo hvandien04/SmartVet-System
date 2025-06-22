@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/dashboard.css';
 import { fetchPetById } from '../services/petService';
 import { fetchMedicalRecordIdsByPetId, fetchMedicalRecordById } from '../services/medicalRecordService';
+import MedicalRecordTable from './MedicalRecordTable';
 
 const PetDetail = ({ petId, activePage, itemsPerPage, onPageChange, onRecordsUpdate }) => {
     const navigate = useNavigate();
@@ -51,14 +52,23 @@ const PetDetail = ({ petId, activePage, itemsPerPage, onPageChange, onRecordsUpd
                 const records = await Promise.all(
                     recordIds.map(async (recordId) => {
                         const record = await fetchMedicalRecordById(recordId);
-                        return record;
+                        return {
+                            recordId: record.recordId || 'N/A',
+                            petId: record.pet?.petId || 'N/A',
+                            doctorId: record.user?.userId || 'N/A',
+                            ownerId: record.pet?.owner?.ownerId || 'N/A',
+                            detail: record.symptoms || 'N/A',
+                            diagnose: record.diagnosisSummary || 'N/A',
+                            treatment: record.treatmentPlan || 'N/A',
+                            status: record.status || 'N/A',
+                        };
                     })
                 );
 
-                console.log('Medical records:', records);
+                console.log('Formatted medical records:', records);
                 setMedicalRecords(records || []);
                 if (onRecordsUpdate) {
-                    onRecordsUpdate(records ? records.length : 0); // Cập nhật số bản ghi
+                    onRecordsUpdate(records ? records.length : 0);
                 }
                 setLoadingRecords(false);
             } catch (err) {
@@ -143,28 +153,30 @@ const PetDetail = ({ petId, activePage, itemsPerPage, onPageChange, onRecordsUpd
                 ) : medicalRecords.length === 0 ? (
                     <div className="no-data">Chưa có lịch sử khám bệnh.</div>
                 ) : (
-                    <table className="pet-table">
-                        <thead>
-                            <tr>
-                                <th>Mã khám</th>
-                                <th>Ngày khám</th>
-                                <th>Chẩn đoán</th>
-                                <th>Điều trị</th>
-                                <th>Bác sĩ</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {currentRecords.map((entry) => (
-                                <tr key={entry.id}>
-                                    <td>{entry.id}</td>
-                                    <td>{formatDate(entry.date)}</td>
-                                    <td>{entry.diagnosis || 'N/A'}</td>
-                                    <td>{entry.treatment || 'N/A'}</td>
-                                    <td>{entry.vet || 'N/A'}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                    <>
+                        <MedicalRecordTable
+                            data={currentRecords}
+                            hideViewColumn={true} // Ẩn cột View
+                            hideDeleteColumn
+                        />
+                        {medicalRecords.length > itemsPerPage && (
+                            <div className="pagination">
+                                <button
+                                    disabled={activePage === 1}
+                                    onClick={() => onPageChange(activePage - 1)}
+                                >
+                                    Trước
+                                </button>
+                                <span>Trang {activePage}</span>
+                                <button
+                                    disabled={startIndex + itemsPerPage >= medicalRecords.length}
+                                    onClick={() => onPageChange(activePage + 1)}
+                                >
+                                    Sau
+                                </button>
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
         </div>

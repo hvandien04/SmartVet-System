@@ -10,17 +10,14 @@ import com.example.Backend_SmartVetSystem.exception.AppException;
 import com.example.Backend_SmartVetSystem.exception.ErrorCode;
 import com.example.Backend_SmartVetSystem.mapper.MedicalImageMapper;
 import com.example.Backend_SmartVetSystem.mapper.MedicalRecordMapper;
-import com.example.Backend_SmartVetSystem.repository.MedicalImageRepository;
-import com.example.Backend_SmartVetSystem.repository.MedicalRecordRepository;
-import com.example.Backend_SmartVetSystem.repository.PetRepository;
-import com.example.Backend_SmartVetSystem.repository.UserRepository;
+import com.example.Backend_SmartVetSystem.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,6 +32,7 @@ public class MedicalRecordService {
     private final PetRepository petRepository;
     private final MedicalImageMapper medicalImageMapper;
     private final MedicalImageRepository medicalImageRepository;
+    private final DiagnosisHistoryRepository diagnosisHistoryRepository;
 
     public MedicalRecordResponse createMedicalRecord(MedicalRecordRequest medicalRecordRequest) {
         MedicalRecord medicalRecord = medicalRecordMapper.toMedicalRecord(medicalRecordRequest);
@@ -87,9 +85,18 @@ public class MedicalRecordService {
         return medicalRecordRepository.findByVisitDate(visitDate).stream().map(medicalRecordMapper::toMedicalRecordResponse).collect(Collectors.toList());
     }
 
+    public List<MedicalRecordResponse> getMedicalRecordByPet(String petId) {
+        Pet pet = petRepository.findById(petId).orElseThrow(()-> new AppException(ErrorCode.PET_NOT_FOUND));
+        return medicalRecordRepository.findByPet(pet).stream().map(medicalRecordMapper::toMedicalRecordResponse).collect(Collectors.toList());
+    }
+
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public String deleteMedicalRecord(String recordId) {
+        MedicalRecord medicalRecord = medicalRecordRepository.findById(recordId).orElseThrow(()-> new AppException(ErrorCode.MEDICAL_RECORD_NOT_FOUND));
+        diagnosisHistoryRepository.deleteAllByRecord(medicalRecord);
+        medicalImageRepository.deleteAllByRecord(medicalRecord);
         medicalRecordRepository.deleteById(recordId);
         return "Medical Record has Id " + recordId + " deleted";
     }
-
 }
