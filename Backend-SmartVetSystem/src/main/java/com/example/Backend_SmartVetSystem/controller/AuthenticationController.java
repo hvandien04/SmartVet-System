@@ -3,13 +3,10 @@ package com.example.Backend_SmartVetSystem.controller;
 import com.example.Backend_SmartVetSystem.dto.request.ApiResponse;
 import com.example.Backend_SmartVetSystem.dto.request.AuthenticationRequest;
 import com.example.Backend_SmartVetSystem.dto.request.IntrospectRequest;
-import com.example.Backend_SmartVetSystem.dto.request.UserUpdatePasswordRequest;
 import com.example.Backend_SmartVetSystem.dto.response.AuthenticationResponse;
-import com.example.Backend_SmartVetSystem.dto.response.UserResponse;
 import com.example.Backend_SmartVetSystem.exception.AppException;
 import com.example.Backend_SmartVetSystem.exception.ErrorCode;
 import com.example.Backend_SmartVetSystem.service.AuthenticationService;
-import com.example.Backend_SmartVetSystem.service.UserService;
 import com.nimbusds.jose.JOSEException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +21,6 @@ import java.text.ParseException;
 @RequestMapping("/auth")
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
-    private final UserService userService;
 
     @PostMapping
     public ApiResponse<AuthenticationResponse> login(@RequestBody AuthenticationRequest request, HttpServletResponse response) {

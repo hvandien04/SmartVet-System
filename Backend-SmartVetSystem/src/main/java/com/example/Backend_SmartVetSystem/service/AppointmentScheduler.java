@@ -29,7 +29,7 @@ public class AppointmentScheduler {
             }
             createSchedule(appointment);
         } catch (SchedulerException e) {
-            throw new RuntimeException("Lỗi khi lập lịch nhắc lịch hẹn", e);
+            throw new RuntimeException("Error when create appointment", e);
         }
     }
 
@@ -57,7 +57,7 @@ public class AppointmentScheduler {
                 }
 
             } catch (SchedulerException e) {
-                throw new RuntimeException("Lỗi khi lập lịch nhắc lịch hẹn", e);
+                throw new RuntimeException("Error when create appointment", e);
             }
         }
     }
