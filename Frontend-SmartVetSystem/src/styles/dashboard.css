@@ -164,10 +164,10 @@ body, #root {
 
 /* Main Content */
 .main {
-    margin-left: 100px;   /* Đẩy main sang phải tránh chồng lên sidebar */
-    width: 100%;
-    max-width: 100%; /* không nên giới hạn */
-    padding: 0 20px; /* tránh sát viền */
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    max-width: 100%;
+    padding: 0px;
     box-sizing: border-box;
 }
 
@@ -275,7 +275,7 @@ body, #root {
 /* Table Styles */
 .table-container {
     margin-top: 20px;
-    width: calc(100vw - 300px);
+    width: 100%;
     box-sizing: border-box;
     background: white;
     border-radius: 10px;

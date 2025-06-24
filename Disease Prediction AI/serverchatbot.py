@@ -116,8 +116,8 @@ def extract_features_from_text(text, answer=""):
         features["Body_Temperature_C"] = float(temp_match.group(1))
         print(f"🌡️ Body_Temperature_C: {features['Body_Temperature_C']}")
 
-    # Heart_Rate_BPM
-    hr_match = re.search(r"(\d{2,3})\s*(nhịp|lần)?\s*(\/)?\s*(phút|bpm|beats per minute)", full_text)
+    # Heart_Rate_BPM – chỉ bắt nếu có đơn vị
+    hr_match = re.search(r"\b(\d{2,3})\s*(nhịp|lần)(\s*(\/)?\s*(phút|bpm|beats per minute))?\b", full_text)
     if hr_match:
         features["Heart_Rate_BPM"] = float(hr_match.group(1))
         print(f"❤️ Heart_Rate_BPM: {features['Heart_Rate_BPM']}")
@@ -172,8 +172,6 @@ def extract_features_from_text(text, answer=""):
         # Chuẩn hoá viết hoa đầu chữ
         breed_found = ' '.join(word.capitalize() for word in breed_found.split())
         features["Breed"] = breed_found
-    else:
-        features["Breed"] = None
 
     # Symptoms và các từ khóa
     symptom_keywords = {
@@ -246,13 +244,13 @@ field_questions = {
     'Gender': "⚥ Thú cưng là đực hay cái?",
     'Season': "📅 Thời điểm thú cưng bị bệnh là mùa nào?",
     'Living_Area': "🏠 Thú cưng sống ở thành thị hay nông thôn?",
-    'Severity': "📈 Theo bạn, tình trạng thú cưng hiện tại là triệu chứng nhẹ (vẫn hoạt động bình thường), triệu chứng trung bình (giảm hoạt động, mệt mỏi), hay triệu chứng nặng (liệt, không ăn uống, cần cấp cứu)?",
+    'Severity': "📈 Theo bạn, tình trạng thú cưng hiện tại là triệu chứng nhẹ (vẫn hoạt động bình thường), triệu chứng trung bình (giảm hoạt động, mệt mỏi), hay triệu chứng nặng (liệt, cần cấp cứu)?",
 
-    'Age_Years': "📆 Thú cưng bao nhiêu tuổi?",
-    'Weight_kg': "⚖️ Thú cưng nặng khoảng bao nhiêu kg?",
-    'Duration_Days': "⏱️ Số ngày bị bệnh chính xác là bao nhiêu?",
-    'Body_Temperature_C': "🌡️ Nhiệt độ cơ thể hiện tại là bao nhiêu?",
-    'Heart_Rate_BPM': "❤️ Nhịp tim mỗi phút của thú cưng là bao nhiêu?",
+    'Age_Years': "📆 Thú cưng bao nhiêu tuổi?(tuổi)",
+    'Weight_kg': "⚖️ Thú cưng nặng khoảng bao nhiêu kg?(kg)",
+    'Duration_Days': "⏱️ Số ngày bị bệnh chính xác là bao nhiêu?(ngày)",
+    'Body_Temperature_C': "🌡️ Nhiệt độ cơ thể hiện tại là bao nhiêu?(độ C)",
+    'Heart_Rate_BPM': "❤️ Nhịp tim mỗi phút của thú cưng là bao nhiêu?(nhịp)",
 
     'Appetite_Loss': "🐶 Thú cưng có bỏ ăn không?",
     'Vomiting': "🤮 Thú cưng có bị nôn không?",
@@ -288,8 +286,10 @@ def find_missing_fields(features):
     ]
 
     for key in unknown_string_fields:
-        if features.get(key, 'Unknown') == 'Unknown':
+        val = features.get(key, 'Unknown')
+        if val in ['Unknown', None, "null" , '']:
             missing.append(key)
+
 
     for key in zero_numeric_fields:
         if features.get(key, 0) == 0:

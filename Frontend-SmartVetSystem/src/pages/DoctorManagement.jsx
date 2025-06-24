@@ -10,6 +10,7 @@ import EditDoctorModal from '../components/EditDoctorModal';
 import { updateDoctor } from '../services/adminService.js';
 import { getSidebarGroups } from '../components/sidebarData';
 import { useAuth } from '../context/AuthContext';
+import SearchBox from "../components/SearchBox.jsx";
 
 const DoctorManagement = () => {
 
@@ -100,19 +101,13 @@ const DoctorManagement = () => {
 
             <div className="main">
                 <div className="top-bar">
-                    <div className="search-box">
-                        <i className="fa fa-search search-icon" />
-                        <input
-                            type="text"
-                            placeholder="Search"
-                            value={searchTerm}
-                            onChange={e => {
-                                setSearchTerm(e.target.value);
-                                setActivePage(1);
-                            }}
-                        />
-                        <button>Search</button>
-                    </div>
+                    <SearchBox
+                        searchTerm={searchTerm}
+                        setSearchTerm={(value) => {
+                            setSearchTerm(value);
+                            setActivePage(1);
+                        }}
+                    />
                     <div className="icons">
                         <i className="fa fa-bell" />
                         <i className="fa fa-question-circle" />
