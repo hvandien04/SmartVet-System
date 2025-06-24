@@ -140,6 +140,26 @@ results = best_model.evals_result()
 train_logloss = results['validation_0']['mlogloss']
 test_logloss = results['validation_1']['mlogloss']
 
+options = {
+    "animalTypes": df["Animal_Type"].unique().tolist(),
+    "breeds": (
+        df.groupby("Animal_Type")["Breed"]
+          .unique()
+          .apply(list)             # Series[str → list[str]]
+          .to_dict()
+    ),
+    "severities": df["Severity"].unique().tolist(),
+    "durationCategories": df["Duration_Category"].unique().tolist(),
+    "seasons": df["Season"].unique().tolist(),
+    "livingAreas": df["Living_Area"].unique().tolist(),
+    "symptoms": binary_cols,       # hoặc rút từ db khác
+}
+
+joblib.dump(options, "form_options.pkl")
+# Sau khi X_train đã đầy đủ thứ tự cột
+feature_order = X_train.columns.tolist()       # <-- lấy thứ tự cuối cùng
+joblib.dump(feature_order, "feature_order.pkl")
+
 def preprocess_input(sample_dict):
     """
     Tiền xử lý dữ liệu đầu vào (sample_dict) thành dạng phù hợp với model.

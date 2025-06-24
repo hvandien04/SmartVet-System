@@ -1,0 +1,258 @@
+:root {
+    --primary: #5c4ef5;
+    --primary-dark: #5043e0;
+    --gray-bg: #e4e7f1;
+    --border: #d3d4de;
+    --radius: 6px;
+    --radius-lg: 8px;
+    --shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    --text: #333;
+    --text-light: #555;
+    --font: "Inter", system-ui, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: var(--font);
+}
+
+.prediction-page {
+    flex: 1;
+    padding: 24px 32px;
+    overflow-y: unset;
+    height: 100dvh;
+}
+
+.page-title {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.sub-text {
+    margin: 4px 0 24px;
+    font-size: 14px;
+    color: var(--text-light);
+}
+
+/* ---------- Layout wrapper ---------- */
+.prediction-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 32px;
+    width: 100%;
+    align-items: flex-start;
+}
+
+/* ---------- FORM ---------- */
+.diagnosis-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.diagnosis-form section h3 {
+    margin: 0 0 8px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.grid-2-cols {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.grid-3-cols {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--text-light);
+}
+
+input,
+select,
+textarea {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #c7c9d9;
+    border-radius: var(--radius);
+}
+
+textarea {
+    resize: none;
+    min-height: 160px;
+}
+.symptom-tag {
+    transition: all 0.3s ease;
+    opacity: 1;
+}
+
+.symptom-tag.selected {
+    background: var(--primary-dark);
+    opacity: 0.5; /* mờ đi */
+}
+
+/* ---------- Tags & Description Combo ---------- */
+.description-tags-wrapper {
+    display: flex;
+    gap: 16px;
+}
+
+.description-tags-wrapper textarea {
+    flex: 1;
+}
+
+.tag-container {
+    width: 280px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-content: flex-start;
+    padding-top: 4px;
+}
+
+.symptom-tag {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-lg);
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.symptom-tag:hover {
+    transform: scale(1.05);
+}
+.selected {
+    background: var(--primary-dark);
+}
+
+/* ---------- Predict button ---------- */
+.predict-btn {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 0;
+    background: var(--primary);
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+    border: none;
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    box-shadow: var(--shadow);
+}
+.paw-btn-icon {
+    font-size: 18px;
+}
+
+/* ---------- Result box ---------- */
+.result-box {
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #f0f1fa;
+    padding: 12px 16px;
+    border-radius: var(--radius-lg);
+}
+
+.result-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--primary);
+    color: #fff;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.result-text p {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* ---------- CHAT PANEL ---------- */
+.chatbot-panel {
+    display: flex;
+    flex-direction: column;
+    background: var(--gray-bg);
+    border-radius: var(--radius-lg);
+    height: 100vh;
+    overflow: hidden;
+}
+
+.chatbot-panel header {
+    background: var(--primary);
+    color: #fff;
+    padding: 12px 0;
+    text-align: center;
+    font-weight: 600;
+    border-top-left-radius: var(--radius-lg);
+    border-top-right-radius: var(--radius-lg);
+}
+
+.chat-history {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+.chat-message {
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    border-radius: var(--radius);
+    max-width: 80%;
+    font-size: 14px;
+}
+
+.chat-message.bot {
+    background: #fff;
+    align-self: flex-start;
+}
+
+.chat-message.user {
+    background: var(--primary);
+    color: #fff;
+    align-self: flex-end;
+}
+
+.chat-input {
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+    border-top: 1px solid #d1d1d1;
+}
+
+.chat-input textarea {
+    flex: 1;
+    resize: none;
+    padding: 6px 10px;
+    height: 32px;
+    font-size: 14px;
+}
+
+.send-btn {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    width: 40px;
+    font-size: 18px;
+    border-radius: var(--radius);
+    cursor: pointer;
+}

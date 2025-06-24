@@ -13,7 +13,7 @@ const Home = () => {
 
     const [sidebarGroups, setSidebarGroups] = useState([]);
     const [activeSidebarItem, setActiveSidebarItem] = useState('');
-    const [showGuestMessage, setShowGuestMessage] = useState(false); // ✅ Thêm state này
+    const [showGuestMessage, setShowGuestMessage] = useState(false);
 
     useEffect(() => {
         const groups = getSidebarGroups(user || {});

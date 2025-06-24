@@ -28,7 +28,7 @@ function getRouteFromItem(item) {
         case 'Quản lý bác sĩ': return '/doctormanagement';
         case 'Quản lý thú cưng': return '/petmanagement';
         case 'Quản lý khách hàng': return '/ownermanagement';
-        case 'Dự đoán bệnh': return '/predict';
+        case 'Dự đoán bệnh': return '/diseaseprediction';
         case 'Lịch sử dự đoán': return '/predictionhistory';
         case 'Danh sách bệnh án': return '/medicalrecords';
         case 'Xuất bệnh án': return '/exportrecords';

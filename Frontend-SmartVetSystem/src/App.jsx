@@ -5,6 +5,7 @@ import DoctorManagement from './pages/DoctorManagement';
 import OwnerManagement from './pages/OwnerManagement';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import DiseasePrediction from './pages/DiseasePrediction';
 import './App.css';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
@@ -33,6 +34,14 @@ function App() {
                         element={
                             <ProtectedRoute>
                                 <OwnerManagement />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/diseaseprediction"
+                        element={
+                            <ProtectedRoute>
+                                <DiseasePrediction />
                             </ProtectedRoute>
                         }
                     />
