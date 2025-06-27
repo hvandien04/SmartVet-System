@@ -14,6 +14,7 @@ import AppointmentManagement from './pages/AppointmentManagement.jsx';
 import './App.css';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
+import Calendar from './pages/Calendar.jsx';
 
 function App() {
     return (
@@ -87,6 +88,14 @@ function App() {
                         element={
                             <ProtectedRoute>
                                 <AppointmentManagement />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/schedule"
+                        element={
+                            <ProtectedRoute>
+                                <Calendar />
                             </ProtectedRoute>
                         }
                     />
