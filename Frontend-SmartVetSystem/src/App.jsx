@@ -11,6 +11,7 @@ import HistoryManagement from './pages/HistoryManagement.jsx';
 import MedicalManagement from './pages/MedicalManagement.jsx';
 import ExtractMedicalFileManagement from './pages/ExtractMedicalFileManagement.jsx';
 import AppointmentManagement from './pages/AppointmentManagement.jsx';
+import DashboardManagement from './pages/DashboardManagement.jsx';
 import './App.css';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
@@ -87,6 +88,14 @@ function App() {
                         element={
                             <ProtectedRoute>
                                 <AppointmentManagement />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/dashboard"
+                        element={
+                            <ProtectedRoute>
+                                <DashboardManagement />
                             </ProtectedRoute>
                         }
                     />
