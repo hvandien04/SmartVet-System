@@ -40,9 +40,8 @@ const Calendar = () => {
 
   useEffect(() => {
     if (user) {
-      const from = format(fromDate, "yyyy-MM-dd'T'00:00:00");
-      const to = format(toDate, "yyyy-MM-dd'T'23:59:59");
-
+      const from = new Date(fromDate.setHours(0, 0, 0, 0)).toISOString();
+      const to = new Date(toDate.setHours(23, 59, 59, 999)).toISOString();
       const loadAppointments = async () => {
         try {
           const data = await fetchAppointmentsByTime(from, to);
