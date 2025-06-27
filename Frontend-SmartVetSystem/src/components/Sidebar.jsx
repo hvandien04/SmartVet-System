@@ -15,7 +15,7 @@ function getIconClass(item) {
         case 'Lịch sử dự đoán': return 'fa fa-history';
         case 'Danh sách bệnh án': return 'fa fa-file-medical';
         case 'Xuất bệnh án': return 'fa fa-file-export';
-        case 'Lịch làm việc': return 'fa fa-calendar-alt';
+        case 'Lịch hẹn': return 'fa fa-calendar-alt';
         case 'Đặt lịch hẹn': return 'fa fa-calendar-check';
         case 'Thông báo khách hàng': return 'fa fa-bell';
         default: return 'fa fa-folder';

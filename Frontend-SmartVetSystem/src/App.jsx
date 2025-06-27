@@ -15,6 +15,7 @@ import DashboardManagement from './pages/DashboardManagement.jsx';
 import './App.css';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
+import Calendar from './pages/Calendar.jsx';
 
 function App() {
     return (
@@ -96,6 +97,14 @@ function App() {
                         element={
                             <ProtectedRoute>
                                 <DashboardManagement />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/schedule"
+                        element={
+                            <ProtectedRoute>
+                                <Calendar />
                             </ProtectedRoute>
                         }
                     />

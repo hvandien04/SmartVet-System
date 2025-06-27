@@ -82,3 +82,20 @@ export async function deleteAppointment(appointmentId) {
     throw new Error(`Không thể xóa cuộc hẹn: ${appointmentId}`);
   }
 }
+// GET: Lấy danh sách cuộc hẹn theo khoảng thời gian
+export async function fetchAppointmentsByTime(from, to) {
+  try {
+    const response = await api.get('/appointment/by-time', {
+      params: { from, to },
+    });
+    console.log('fetchAppointmentsByTime response:', response.data);
+    return response.data.result; // nếu API trả về dạng { result: [...] }
+  } catch (error) {
+    console.error('fetchAppointmentsByTime error:', {
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message,
+    });
+    throw new Error('Không thể tải cuộc hẹn theo thời gian');
+  }
+}
