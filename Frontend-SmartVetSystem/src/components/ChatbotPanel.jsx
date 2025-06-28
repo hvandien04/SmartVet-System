@@ -77,7 +77,7 @@ export default function ChatbotPanel() {
             chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
         }
     }, [messages]);
-    
+
     /* ---------- Helpers ---------- */
     const addMessage = (msg) => {
         setMessages((prev) => [
@@ -157,7 +157,7 @@ export default function ChatbotPanel() {
             setAnswers({});
             setInitialInput(null);
             setWaitingForFollowUp(false);
-            setHasAskedFollowUp(false)  // <-- thêm dòng này
+            setHasAskedFollowUp(false)
             return;
         }
 
@@ -202,7 +202,7 @@ export default function ChatbotPanel() {
 
             if (remain.length === 0) {
                 setWaitingForFollowUp(false);
-                setHasAskedFollowUp(false); // để cho luồng mới
+                setHasAskedFollowUp(false);
                 await sendFollowUpAnswers();
             } else {
                 setHasAskedFollowUp(false);

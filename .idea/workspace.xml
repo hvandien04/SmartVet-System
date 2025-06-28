@@ -7,15 +7,8 @@
     <list default="true" id="7f26f030-429d-4829-acb5-d77069e980aa" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Disease Prediction AI/AIdudoanbenh.py" beforeDir="false" afterPath="$PROJECT_DIR$/Disease Prediction AI/AIdudoanbenh.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Disease Prediction AI/label_encoder.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/Disease Prediction AI/label_encoder.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Disease Prediction AI/scaler.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/Disease Prediction AI/scaler.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Disease Prediction AI/serverchatbot.py" beforeDir="false" afterPath="$PROJECT_DIR$/Disease Prediction AI/serverchatbot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Disease Prediction AI/target_encoder.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/Disease Prediction AI/target_encoder.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/components/Sidebar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/components/Sidebar.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/pages/DoctorManagement.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/pages/DoctorManagement.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/pages/Home.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/pages/Home.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/styles/dashboard.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/styles/dashboard.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Disease Prediction AI/serverai.py" beforeDir="false" afterPath="$PROJECT_DIR$/Disease Prediction AI/serverai.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/components/ChatbotPanel.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/components/ChatbotPanel.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -134,7 +127,9 @@
       <workItem from="1750314181028" duration="945000" />
       <workItem from="1750670416177" duration="17607000" />
       <workItem from="1750735267747" duration="3908000" />
-      <workItem from="1750745125496" duration="4547000" />
+      <workItem from="1750745125496" duration="5494000" />
+      <workItem from="1750849073535" duration="2033000" />
+      <workItem from="1750928044758" duration="6364000" />
     </task>
     <servers />
   </component>

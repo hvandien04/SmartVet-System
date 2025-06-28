@@ -152,12 +152,12 @@ options = {
     "durationCategories": df["Duration_Category"].unique().tolist(),
     "seasons": df["Season"].unique().tolist(),
     "livingAreas": df["Living_Area"].unique().tolist(),
-    "symptoms": binary_cols,       # hoặc rút từ db khác
+    "symptoms": binary_cols,     
 }
 
 joblib.dump(options, "form_options.pkl")
 # Sau khi X_train đã đầy đủ thứ tự cột
-feature_order = X_train.columns.tolist()       # <-- lấy thứ tự cuối cùng
+feature_order = X_train.columns.tolist()      
 joblib.dump(feature_order, "feature_order.pkl")
 
 def preprocess_input(sample_dict):

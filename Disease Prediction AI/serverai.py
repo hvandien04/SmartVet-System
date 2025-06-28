@@ -7,7 +7,7 @@ import pandas as pd
 import numpy as np
 
 # ---------- Đường dẫn artefact ----------
-ART_DIR = os.path.dirname(__file__)  # cùng thư mục với serverai.py
+ART_DIR = os.path.dirname(__file__)
 
 # ---------- Nạp artefact ----------
 OPTIONS = joblib.load(os.path.join(ART_DIR, "form_options.pkl"))
@@ -80,8 +80,6 @@ def preprocess(sample: dict) -> pd.DataFrame:
     df = df.reindex(columns=FEATURE_ORDER)
     return df
 
-
-
 @app.post("/predict")
 def predict():
     if not request.is_json:
@@ -96,7 +94,7 @@ def predict():
         probs = MODEL.predict_proba(df)[0]
         idx = int(np.argmax(probs))
         return jsonify({
-            "received": sample,                 # trả về kèm payload để client xem (tùy ý)
+            "received": sample,                 # trả về kèm payload để client xem
             "predicted_disease": LABEL_ENC.inverse_transform([idx])[0],
             "probabilities": {
                 cls: round(float(p), 4) for cls, p in zip(LABEL_ENC.classes_, probs)
