@@ -6,12 +6,14 @@ import OwnerManagement from './pages/OwnerManagement';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import PetManagement from './pages/PetManagement';
+import DiseasePrediction from './pages/DiseasePrediction';
 import PetDetailManagement from './pages/PetDetailManagement.jsx';
 import HistoryManagement from './pages/HistoryManagement.jsx';
 import MedicalManagement from './pages/MedicalManagement.jsx';
 import ExtractMedicalFileManagement from './pages/ExtractMedicalFileManagement.jsx';
 import AppointmentManagement from './pages/AppointmentManagement.jsx';
 import DashboardManagement from './pages/DashboardManagement.jsx';
+
 import './App.css';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
@@ -105,6 +107,14 @@ function App() {
                         element={
                             <ProtectedRoute>
                                 <Calendar />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/diseaseprediction"
+                        element={
+                            <ProtectedRoute>
+                                <DiseasePrediction />
                             </ProtectedRoute>
                         }
                     />
