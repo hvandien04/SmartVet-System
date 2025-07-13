@@ -6,9 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="7f26f030-429d-4829-acb5-d77069e980aa" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Disease Prediction AI/AIdudoanbenh.py" beforeDir="false" afterPath="$PROJECT_DIR$/Disease Prediction AI/AIdudoanbenh.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Disease Prediction AI/serverai.py" beforeDir="false" afterPath="$PROJECT_DIR$/Disease Prediction AI/serverai.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/components/ChatbotPanel.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/components/ChatbotPanel.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend-SmartVetSystem/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend-SmartVetSystem/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/components/DoctorTable.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend-SmartVetSystem/src/components/DoctorTable.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -130,6 +129,8 @@
       <workItem from="1750745125496" duration="5494000" />
       <workItem from="1750849073535" duration="2033000" />
       <workItem from="1750928044758" duration="6364000" />
+      <workItem from="1751125583367" duration="3001000" />
+      <workItem from="1752394212639" duration="784000" />
     </task>
     <servers />
   </component>

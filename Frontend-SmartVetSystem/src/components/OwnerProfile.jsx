@@ -59,10 +59,6 @@ const OwnerProfile = ({ owner, onBack }) => {
             </div>
 
             <div className="profile-section">
-                <div className="avatar">
-                    <img src="/avatar.png" alt="Avatar" />
-                </div>
-
                 <div className="profile-card">
                     <h3>Profile</h3>
                     <p><strong>Mã chủ nuôi:</strong> {ownerData.ownerId}</p>

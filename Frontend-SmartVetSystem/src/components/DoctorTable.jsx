@@ -13,7 +13,6 @@ const DoctorTable = ({ data, onEdit, onDelete }) => (
                 <th>Phone</th>
                 <th>Role</th>
                 <th>Edit</th>
-                <th>Delete</th>
             </tr>
             </thead>
             <tbody>
@@ -28,9 +27,6 @@ const DoctorTable = ({ data, onEdit, onDelete }) => (
                     <td>{doc.role}</td>
                     <td className="action-icons">
                         <i className="fa fa-pencil" onClick={() => onEdit(doc)} />
-                    </td>
-                    <td className="action-icons">
-                        <i className="fa fa-trash" onClick={() => onDelete(doc.id)} />
                     </td>
                 </tr>
             ))}

@@ -121,14 +121,6 @@ const PetDetail = ({ petId, activePage, itemsPerPage, onPageChange, onRecordsUpd
             </div>
 
             <div className="profile-section">
-                <div className="avatar">
-                    <img
-                        src="/avatar.png"
-                        alt="Avatar"
-                        onError={(e) => (e.target.src = '/fallback-avatar.png')}
-                    />
-                </div>
-
                 <div className="profile-card">
                     <h3>Thông tin thú cưng</h3>
                     <p><strong>Mã thú cưng:</strong> {pet.petId}</p>
